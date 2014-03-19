@@ -18,6 +18,7 @@ feature
 			test_make_empty
 			test_make_filled
 			test_make_from_array
+			test_make_from_special
 		end
 
 
@@ -27,6 +28,7 @@ feature
 default_value: INTEGER is 37
 array_under_test: ARRAY[INTEGER]
 array_under_test_2: ARRAY[INTEGER]
+array_under_test_3: ARRAY[INTEGER]
 
 feature
 			-- Tests for features
@@ -53,10 +55,24 @@ test_make_from_array
 			-- Test for make_from_array creation procedure
 			do
 				create array_under_test_2.make_from_array (array_under_test)
-				print("test_make_from_array passed%N")
+				print("make_from_array test passed%N")
 			ensure
 				across array_under_test_2 as element all element.item = default_value end
 			end
+
+test_make_from_special
+			-- Test for make_from_special creation procedure
+			local
+				special: SPECIAL[INTEGER]
+			do
+				create special.make_filled (default_value, 100)
+				create array_under_test_3.make_from_special(special)
+				print("make_from_special test passed%N")
+			ensure
+				across array_under_test_3 as element all element.item = default_value end
+			end
+
+
 feature
 			-- All helper features go here
 
