@@ -17,14 +17,19 @@ feature
 			print_header
 			test_make_empty
 			test_make_filled
+			test_make_from_array
 		end
 
 
-feature -- All attributes used during testing go here
+feature
+			-- All attributes used during testing go here
 
+default_value: INTEGER is 37
 array_under_test: ARRAY[INTEGER]
+array_under_test_2: ARRAY[INTEGER]
 
--- Tests for Creation Procedures
+feature
+			-- Tests for features
 
 test_make_empty
 			-- Test for make_empty creation procedure
@@ -32,19 +37,28 @@ test_make_empty
 			create array_under_test.make_empty
 			print("make_empty test passed%N")
 		ensure
-			array_under_test /= Void
+			array_under_test.is_empty = True
 		end
 
 test_make_filled
 			-- Test for make_filled creation procedure
 			do
-				create array_under_test.make_filled (0, 10, 1000)
+				create array_under_test.make_filled (default_value, 10, 1000)
 				print("make_filled test passed%N")
 			ensure
-				array_under_test[55] = 0
+				across array_under_test as element all element.item = default_value  end
 			end
 
--- Helper Features
+test_make_from_array
+			-- Test for make_from_array creation procedure
+			do
+				create array_under_test_2.make_from_array (array_under_test)
+				print("test_make_from_array passed%N")
+			ensure
+				across array_under_test_2 as element all element.item = default_value end
+			end
+feature
+			-- All helper features go here
 
 print_header
 			-- Prints the header for the test suite
