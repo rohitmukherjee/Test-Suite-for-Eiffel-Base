@@ -19,6 +19,8 @@ feature
 			test_make_filled
 			test_make_from_array
 			test_make_from_special
+			test_make_from_cil
+			test_put
 		end
 
 
@@ -29,6 +31,7 @@ default_value: INTEGER is 37
 array_under_test: ARRAY[INTEGER]
 array_under_test_2: ARRAY[INTEGER]
 array_under_test_3: ARRAY[INTEGER]
+array_under_test_4: ARRAY[INTEGER]
 
 feature
 			-- Tests for features
@@ -45,7 +48,7 @@ test_make_empty
 test_make_filled
 			-- Test for make_filled creation procedure
 			do
-				create array_under_test.make_filled (default_value, 10, 1000)
+				create array_under_test.make_filled (default_value, 0, 99)
 				print("make_filled test passed%N")
 			ensure
 				across array_under_test as element all element.item = default_value  end
@@ -72,6 +75,29 @@ test_make_from_special
 				across array_under_test_3 as element all element.item = default_value end
 			end
 
+test_make_from_cil
+			-- Test for make_from_cil creation procedure
+			do
+			-- TODO		: Have to figure out how to test this with .NET
+			end
+
+test_put
+			-- Test put or [] functionality of ARRAY
+			local
+				i: INTEGER
+			do
+				from
+				  i := 0
+				until
+				  i = 100
+				loop
+				  array_under_test_2.put (3*default_value, i)
+				  i := i + 1
+				end
+				print("put test passed%N")
+			ensure
+				across array_under_test_2 as element all element.item = 3*default_value end
+			end
 
 feature
 			-- All helper features go here
