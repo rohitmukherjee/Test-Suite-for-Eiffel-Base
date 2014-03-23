@@ -21,7 +21,7 @@ feature
 			test_make_filled
 			test_make_from_array
 			test_make_from_special
-			test_make_from_cil
+			test_make_from_cil --TODO
 
 			-- Access Tests
 			test_access
@@ -43,12 +43,17 @@ feature
 			test_filled_with
 			test_full_empty_array
 			test_full_non_empty_array
-			test_same_items --TODO
+			test_same_items_same_array
+			test_same_items_equal_arrays
+			test_same_items_unequal_arrays
 			test_void_index --TODO
 			test_extendible_empty_array
 			test_extendible_non_empty_array
 			test_prunable_empty_array
 			test_prunable_non_empty_array
+			test_resizable --TODO
+			test_valid_index_set_empty_array
+			test_valid_index_set_non_empty_array
 
 			-- Element Change Tests
 			test_put
@@ -347,11 +352,58 @@ test_full_non_empty_array
 				end
 			end
 
-test_same_items
-			-- Tests same_items feature of an array
+test_same_items_same_array
+			-- This tests if two arrays contain equal elements. Three cases have to be tested
+			-- array.is_equal(array) should be true, array.is_equal(array2 with same elements) should be true
+			-- and array.is_equal(different array) should return false
+			-- At the moment, all three results are && -ed and then asserted. Will probably extract into
+			-- individual test cases with better naming conventions
+			local
+				array1: ARRAY[INTEGER]
 			do
-
+				create array1.make_filled (default_value, -999, 1000)
+				if array1.same_items (array1)
+					then print_test_passed ("same_items_same_array")
+				else print_test_not_passed ("same_items_same_array")
+				end
 			end
+
+test_same_items_equal_arrays
+			-- This tests if two arrays contain equal elements. Three cases have to be tested
+			-- array.is_equal(array) should be true, array.is_equal(array2 with same elements) should be true
+			-- and array.is_equal(different array) should return false
+			-- At the moment, all three results are && -ed and then asserted. Will probably extract into
+			-- individual test cases with better naming conventions
+			local
+				array1: ARRAY[INTEGER]
+				array2: ARRAY[INTEGER]
+			do
+				create array1.make_filled (default_value, -999, 1000)
+				create array2.make_from_array (array1)
+				if array1.same_items (array2)
+					then print_test_passed ("same_items_equal_arrays")
+				else print_test_not_passed ("same_items_equal_arrays")
+				end
+			end
+
+test_same_items_unequal_arrays
+			-- This tests if two arrays contain equal elements. Three cases have to be tested
+			-- array.is_equal(array) should be true, array.is_equal(array2 with same elements) should be true
+			-- and array.is_equal(different array) should return false
+			-- At the moment, all three results are && -ed and then asserted. Will probably extract into
+			-- individual test cases with better naming conventions
+			local
+				array1: ARRAY[INTEGER]
+				array2: ARRAY[INTEGER]
+			do
+				create array1.make_filled (default_value, -999, 1000)
+				create array2.make_filled (2 * default_value, -998, 1000)
+				if  not array1.same_items (array2)
+					then print_test_passed ("same_items_unequal_arrays")
+				else print_test_not_passed ("same_items_unequal_arrays")
+				end
+			end
+
 
 test_void_index
 			-- Tests void Index feature of an array
@@ -408,6 +460,38 @@ test_prunable_non_empty_array
 					print_test_passed("prunable_non_empty_array")
 				else
 					print_test_not_passed ("prunable_non_empty_array")
+				end
+			end
+
+test_resizable
+			-- Test checks resizable feature of ARRAY
+			do
+
+			end
+
+test_valid_index_set_empty_array
+			-- Test checks whether indexes are correctly set for empty ARRAYS
+			local
+				array: ARRAY[INTEGER]
+			do
+				create array.make_empty
+				if array.valid_index_set then
+					print_test_passed ("valid_index_set_empty_array")
+				else
+					print_test_not_passed ("valid_index_set_empty_array")
+				end
+			end
+
+test_valid_index_set_non_empty_array
+			-- Test checks whether indexes are correctly set for empty ARRAYS
+			local
+				array: ARRAY[INTEGER]
+			do
+				create array.make_from_array (array_under_test)
+				if array.valid_index_set then
+					print_test_passed ("valid_index_set_non_empty_array")
+				else
+					print_test_not_passed ("valid_index_set_non_empty_array")
 				end
 			end
 
