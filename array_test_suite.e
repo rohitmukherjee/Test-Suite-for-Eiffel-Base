@@ -25,7 +25,7 @@ feature
 
 			-- Access Tests
 			test_access
-			test_has
+			test_has --TODO
 
 			-- Measurement Tests
 			test_lower
@@ -43,10 +43,12 @@ feature
 			test_filled_with
 			test_full_empty_array
 			test_full_non_empty_array
-			test_same_items
-			test_void_index
-			test_extendible
-			test_prunable
+			test_same_items --TODO
+			test_void_index --TODO
+			test_extendible_empty_array
+			test_extendible_non_empty_array
+			test_prunable_empty_array
+			test_prunable_non_empty_array
 
 			-- Element Change Tests
 			test_put
@@ -320,7 +322,7 @@ test_filled_with
 			end
 
 test_full_empty_array
-			-- Test should always return true for any array
+			-- Test should always return True for any array
 			local
 				array: ARRAY[INTEGER]
 			do
@@ -333,7 +335,7 @@ test_full_empty_array
 			end
 
 test_full_non_empty_array
-			-- Test should always return true for any array
+			-- Test should always return True for any array
 			local
 				array: ARRAY[INTEGER]
 			do
@@ -357,15 +359,56 @@ test_void_index
 
 			end
 
-test_extendible
-			-- Always returns False
+test_extendible_empty_array
+			-- Test should always return False for any array
+			local
+				array: ARRAY[INTEGER]
 			do
-
+				create array.make_empty
+				if not array.extendible then
+					print_test_passed("extendible_empty_array")
+				else
+					print_test_not_passed ("extendible_empty_array")
+				end
 			end
-test_prunable
-			-- Always returns False
-			do
 
+test_extendible_non_empty_array
+			-- Test should always return False for any array
+			local
+				array: ARRAY[INTEGER]
+			do
+				create array.make_from_array (array_under_test)
+				if not array.extendible then
+					print_test_passed("extendible_non_empty_array")
+				else
+					print_test_not_passed ("extendible_non_empty_array")
+				end
+			end
+
+test_prunable_empty_array
+			-- Test should always return False for any array
+			local
+				array: ARRAY[INTEGER]
+			do
+				create array.make_empty
+				if not array.prunable then
+					print_test_passed("prunable_empty_array")
+				else
+					print_test_not_passed ("prunable_empty_array")
+				end
+			end
+
+test_prunable_non_empty_array
+			-- Test should always return False for any array
+			local
+				array: ARRAY[INTEGER]
+			do
+				create array.make_from_array (array_under_test)
+				if not array.prunable then
+					print_test_passed("prunable_non_empty_array")
+				else
+					print_test_not_passed ("prunable_non_empty_array")
+				end
 			end
 
 feature
