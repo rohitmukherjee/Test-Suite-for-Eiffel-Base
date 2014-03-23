@@ -46,7 +46,9 @@ feature
 			test_same_items_same_array
 			test_same_items_equal_arrays
 			test_same_items_unequal_arrays
-			test_void_index --TODO
+			test_valid_index_empty_array --TODO
+			test_valid_index_within_bounds
+			test_valid_index_not_within_bounds
 			test_extendible_empty_array
 			test_extendible_non_empty_array
 			test_prunable_empty_array
@@ -405,10 +407,43 @@ test_same_items_unequal_arrays
 			end
 
 
-test_void_index
-			-- Tests void Index feature of an array
+test_valid_index_empty_array
+			-- Tests valid_index feature of an empty array
+			local
+				array: ARRAY[INTEGER]
 			do
+				create array.make_empty
+				if not array.valid_index (-999) then
+					print_test_passed("valid_index_empty_array")
+				else
+					print_test_not_passed ("valid_index_empty_array")
+				end
+			end
 
+test_valid_index_within_bounds
+			-- Tests valid_index feature for an index within array bounds
+			local
+				array: ARRAY[INTEGER]
+			do
+				create array.make_filled (default_value, -999, 1000)
+				if (array.valid_index (-999) and array.valid_index (1000) and array.valid_index (500)) then
+					print_test_passed ("valid_index_within_bounds")
+				else
+					print_test_not_passed ("valid_index_within_bounds")
+				end
+			end
+
+test_valid_index_not_within_bounds
+			-- Tests valid_index feature for an index within array bounds
+			local
+				array: ARRAY[INTEGER]
+			do
+				create array.make_filled (default_value, -999, 1000)
+				if not array.valid_index (-9999) then
+					print_test_passed ("valid_index_not_within_bounds")
+				else
+					print_test_not_passed ("valid_index_not_within_bounds")
+				end
 			end
 
 test_extendible_empty_array
