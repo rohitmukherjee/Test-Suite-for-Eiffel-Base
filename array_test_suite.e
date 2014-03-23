@@ -25,7 +25,6 @@ feature
 
 			-- Access Tests
 			test_access
-			test_put
 			test_has
 
 			-- Measurement Tests
@@ -34,6 +33,10 @@ feature
 			test_count
 			test_capacity
 			test_occurences
+
+			test_put
+			test_index_set
+
 		end
 
 
@@ -66,7 +69,7 @@ test_make_filled
 			-- Test for make_filled creation procedure
 			do
 				create array_under_test.make_filled (default_value, 0, 99)
-				print("make_filled test passed%N")
+				print_test_passed ("make")
 			ensure
 				across array_under_test as element all element.item = default_value  end
 			end
@@ -75,7 +78,7 @@ test_make_from_array
 			-- Test for make_from_array creation procedure
 			do
 				create array_under_test_2.make_from_array (array_under_test)
-				print("make_from_array test passed%N")
+				print_test_passed ("make_from_array")
 			ensure
 				across array_under_test_2 as element all element.item = default_value end
 			end
@@ -87,7 +90,7 @@ test_make_from_special
 			do
 				create special.make_filled (default_value, 100)
 				create array_under_test_3.make_from_special(special)
-				print("make_from_special test passed%N")
+				print_test_passed ("make_from_special")
 			ensure
 				across array_under_test_3 as element all element.item = default_value end
 			end
@@ -104,14 +107,9 @@ test_access
 			do
 				array_under_test.put ((array_under_test @ 1) * (array_under_test @ 2), 3)
 					if	array_under_test @ 3 = (default_value * default_value)
-					then print ("@ Test Passed%N")
+					then print_test_passed ("@")
 					else
-					     print ("@ Test Not Passed%N")
-					     print("Expected Value:")
-					     print(default_value * default_value)
-					     print_new_line
-					     print(array_under_test @ 3)
-					     print_new_line
+					     print_test_not_passed ("@")
 					end
 			end
 
@@ -133,7 +131,7 @@ test_put
 				  array_under_test_2.put (2 * default_value, i)
 				  i := i + 1
 				end
-				print("put test passed%N")
+				print_test_passed ("put")
 			ensure
 				across array_under_test_2 as element all element.item = 2 * default_value end
 			end
@@ -145,9 +143,9 @@ test_lower
 			do
 				create array_under_lower_test.make_filled (-1, -999, 1000)
 				if array_under_lower_test.lower = -999
-				then print("lower test passed%N")
+				then print_test_passed ("lower")
 				else
-					print ("lower test not passed%N")
+					print_test_not_passed ("lower")
 				end
 			end
 
@@ -158,9 +156,9 @@ test_upper
 			do
 				create array_under_upper_test.make_filled (-1, -999, 1000)
 				if array_under_upper_test.upper = 1000
-				then print("upper test passed%N")
+				then print_test_passed ("upper")
 				else
-					print ("upper test not passed%N")
+					print_test_not_passed ("upper")
 				end
 			end
 
@@ -171,9 +169,9 @@ test_count
 			do
 				create array_under_count_test.make_filled (-1, -999, 1000)
 				if array_under_count_test.count = 2000
-				then print("count test passed%N")
+				then print_test_passed ("count")
 				else
-					print ("count test not passed%N")
+					print_test_not_passed ("count")
 				end
 			end
 
@@ -184,9 +182,9 @@ test_capacity
 			do
 				create array_under_capacity_test.make_filled (-1, -999, 1000)
 				if array_under_capacity_test.capacity = 2000
-				then print("capacity test passed%N")
+				then print_test_passed ("capacity")
 				else
-					print ("capacity test not passed%N")
+					print_test_not_passed ("capacity")
 				end
 			end
 
@@ -208,9 +206,24 @@ test_occurences
 					i := i + 1
 				end
 				if array_under_occurences_test.occurrences (1) = 1000
-				then print("occurences test passed%N")
+				then print_test_passed ("occurences")
 				else
-					print("occurences test not passed%N")
+					print_test_not_passed ("occurences")
+				end
+			end
+
+test_index_set
+			-- Test index_set feature of Arrays
+			local
+				array_index_set: ARRAY[INTEGER]
+				index_set_returned: INTEGER_INTERVAL
+			do
+				create array_index_set.make_filled (0, -999, 1000)
+				index_set_returned := array_index_set.index_set
+				if (index_set_returned.upper = 1000 and index_set_returned.lower = -999) then
+					print_test_passed ("index_set")
+				else
+					print_test_not_passed ("index_set")
 				end
 			end
 
@@ -221,6 +234,16 @@ print_new_line
 			--Prints a new line character
 			do
 				print("%N")
+			end
+
+print_test_passed(a_test_name: STRING)
+			do
+				print(a_test_name + " test passed%N")
+			end
+
+print_test_not_passed(a_test_name: STRING)
+			do
+				print(a_test_name + " test not passed%N")
 			end
 
 print_header
