@@ -33,10 +33,23 @@ feature
 			test_count
 			test_capacity
 			test_occurences
-
-			test_put
 			test_index_set
 
+			-- Comparison Tests
+			test_is_equal_same_array
+			test_is_equal_equal_arrays
+			test_is_equal_unequal_arrays
+			test_all_default
+			test_filled_with
+			test_full_empty_array
+			test_full_non_empty_array
+			test_same_items
+			test_void_index
+			test_extendible
+			test_prunable
+
+			-- Element Change Tests
+			test_put
 		end
 
 
@@ -141,7 +154,7 @@ test_lower
 			local
 				array_under_lower_test: ARRAY[INTEGER]
 			do
-				create array_under_lower_test.make_filled (-1, -999, 1000)
+				create array_under_lower_test.make_filled (default_value, -999, 1000)
 				if array_under_lower_test.lower = -999
 				then print_test_passed ("lower")
 				else
@@ -154,7 +167,7 @@ test_upper
 			local
 				array_under_upper_test: ARRAY[INTEGER]
 			do
-				create array_under_upper_test.make_filled (-1, -999, 1000)
+				create array_under_upper_test.make_filled (default_value, -999, 1000)
 				if array_under_upper_test.upper = 1000
 				then print_test_passed ("upper")
 				else
@@ -167,7 +180,7 @@ test_count
 			local
 				array_under_count_test: ARRAY[INTEGER]
 			do
-				create array_under_count_test.make_filled (-1, -999, 1000)
+				create array_under_count_test.make_filled (default_value, -999, 1000)
 				if array_under_count_test.count = 2000
 				then print_test_passed ("count")
 				else
@@ -180,7 +193,7 @@ test_capacity
 			local
 				array_under_capacity_test: ARRAY[INTEGER]
 			do
-				create array_under_capacity_test.make_filled (-1, -999, 1000)
+				create array_under_capacity_test.make_filled (default_value, -999, 1000)
 				if array_under_capacity_test.capacity = 2000
 				then print_test_passed ("capacity")
 				else
@@ -194,7 +207,7 @@ test_occurences
 				array_under_occurences_test: ARRAY[INTEGER]
 				i: INTEGER
 			do
-				create array_under_occurences_test.make_filled (-1, -999, 1000)
+				create array_under_occurences_test.make_filled (default_value, -999, 1000)
 				from
 					i := -999
 				until
@@ -218,13 +231,141 @@ test_index_set
 				array_index_set: ARRAY[INTEGER]
 				index_set_returned: INTEGER_INTERVAL
 			do
-				create array_index_set.make_filled (0, -999, 1000)
+				create array_index_set.make_filled (default_value, -999, 1000)
 				index_set_returned := array_index_set.index_set
 				if (index_set_returned.upper = 1000 and index_set_returned.lower = -999) then
 					print_test_passed ("index_set")
 				else
 					print_test_not_passed ("index_set")
 				end
+			end
+
+test_is_equal_same_array
+			-- This tests if two arrays contain equal elements. Three cases have to be tested
+			-- array.is_equal(array) should be true, array.is_equal(array2 with same elements) should be true
+			-- and array.is_equal(different array) should return false
+			-- At the moment, all three results are && -ed and then asserted. Will probably extract into
+			-- individual test cases with better naming conventions
+			local
+				array1: ARRAY[INTEGER]
+			do
+				create array1.make_filled (default_value, -999, 1000)
+				if array1.is_equal (array1)
+					then print_test_passed ("is_equal_same_array")
+				else print_test_not_passed ("is_equal_same_array")
+				end
+			end
+
+test_is_equal_equal_arrays
+			-- This tests if two arrays contain equal elements. Three cases have to be tested
+			-- array.is_equal(array) should be true, array.is_equal(array2 with same elements) should be true
+			-- and array.is_equal(different array) should return false
+			-- At the moment, all three results are && -ed and then asserted. Will probably extract into
+			-- individual test cases with better naming conventions
+			local
+				array1: ARRAY[INTEGER]
+				array2: ARRAY[INTEGER]
+			do
+				create array1.make_filled (default_value, -999, 1000)
+				create array2.make_from_array (array1)
+				if array1.is_equal (array2)
+					then print_test_passed ("is_equal_equal_arrays")
+				else print_test_not_passed ("is_equal_equal_arrays")
+				end
+			end
+
+test_is_equal_unequal_arrays
+			-- This tests if two arrays contain equal elements. Three cases have to be tested
+			-- array.is_equal(array) should be true, array.is_equal(array2 with same elements) should be true
+			-- and array.is_equal(different array) should return false
+			-- At the moment, all three results are && -ed and then asserted. Will probably extract into
+			-- individual test cases with better naming conventions
+			local
+				array1: ARRAY[INTEGER]
+				array2: ARRAY[INTEGER]
+			do
+				create array1.make_filled (default_value, -999, 1000)
+				create array2.make_filled (2 * default_value, -998, 1000)
+				if  not array1.is_equal (array2)
+					then print_test_passed ("is_equal_unequal_arrays")
+				else print_test_not_passed ("is_equal_unequal_arrays")
+				end
+			end
+
+test_all_default
+			-- Test to check if an array contains all default_values
+			-- TODO: Test is failing although the array has default_values
+			local
+				array: ARRAY[INTEGER]
+			do
+				create array.make_filled (default_value, -999, 1000)
+				if array.all_default then
+					print_test_passed ("all_default")
+				else
+					print_test_not_passed ("all_default")
+				end
+			end
+
+test_filled_with
+			-- Test to check if an array is filled with a certain value
+			local
+				array: ARRAY[INTEGER]
+			do
+				create array.make_filled (default_value, -999, 1000)
+				if array.filled_with (default_value)
+				then print_test_passed ("filled_with")
+				else
+					print_test_not_passed("filled_with")
+				end
+			end
+
+test_full_empty_array
+			-- Test should always return true for any array
+			local
+				array: ARRAY[INTEGER]
+			do
+				create array.make_empty
+				if array.full then
+					print_test_passed("full_empty_array")
+				else
+					print_test_not_passed ("full_empty_array")
+				end
+			end
+
+test_full_non_empty_array
+			-- Test should always return true for any array
+			local
+				array: ARRAY[INTEGER]
+			do
+				create array.make_from_array (array_under_test)
+				if array.full then
+					print_test_passed("full_non_empty_array")
+				else
+					print_test_not_passed ("full_non_empty_array")
+				end
+			end
+
+test_same_items
+			-- Tests same_items feature of an array
+			do
+
+			end
+
+test_void_index
+			-- Tests void Index feature of an array
+			do
+
+			end
+
+test_extendible
+			-- Always returns False
+			do
+
+			end
+test_prunable
+			-- Always returns False
+			do
+
 			end
 
 feature
