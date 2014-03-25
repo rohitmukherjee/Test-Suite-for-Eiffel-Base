@@ -82,7 +82,7 @@ test_make_empty
 			-- Test for make_empty creation procedure
 		do
 			create array_under_test.make_empty
-			print("make_empty test passed%N")
+			print ("make_empty test passed%N")
 		ensure
 			array_under_test.is_empty = True
 		end
@@ -324,7 +324,7 @@ test_filled_with
 				if array.filled_with (default_value)
 				then print_test_passed ("filled_with")
 				else
-					print_test_not_passed("filled_with")
+					print_test_not_passed ("filled_with")
 				end
 			end
 
@@ -335,7 +335,7 @@ test_full_empty_array
 			do
 				create array.make_empty
 				if array.full then
-					print_test_passed("full_empty_array")
+					print_test_passed ("full_empty_array")
 				else
 					print_test_not_passed ("full_empty_array")
 				end
@@ -348,7 +348,7 @@ test_full_non_empty_array
 			do
 				create array.make_from_array (array_under_test)
 				if array.full then
-					print_test_passed("full_non_empty_array")
+					print_test_passed ("full_non_empty_array")
 				else
 					print_test_not_passed ("full_non_empty_array")
 				end
@@ -414,7 +414,7 @@ test_valid_index_empty_array
 			do
 				create array.make_empty
 				if not array.valid_index (-999) then
-					print_test_passed("valid_index_empty_array")
+					print_test_passed ("valid_index_empty_array")
 				else
 					print_test_not_passed ("valid_index_empty_array")
 				end
@@ -453,7 +453,7 @@ test_extendible_empty_array
 			do
 				create array.make_empty
 				if not array.extendible then
-					print_test_passed("extendible_empty_array")
+					print_test_passed ("extendible_empty_array")
 				else
 					print_test_not_passed ("extendible_empty_array")
 				end
@@ -466,7 +466,7 @@ test_extendible_non_empty_array
 			do
 				create array.make_from_array (array_under_test)
 				if not array.extendible then
-					print_test_passed("extendible_non_empty_array")
+					print_test_passed ("extendible_non_empty_array")
 				else
 					print_test_not_passed ("extendible_non_empty_array")
 				end
@@ -479,7 +479,7 @@ test_prunable_empty_array
 			do
 				create array.make_empty
 				if not array.prunable then
-					print_test_passed("prunable_empty_array")
+					print_test_passed ("prunable_empty_array")
 				else
 					print_test_not_passed ("prunable_empty_array")
 				end
@@ -492,7 +492,7 @@ test_prunable_non_empty_array
 			do
 				create array.make_from_array (array_under_test)
 				if not array.prunable then
-					print_test_passed("prunable_non_empty_array")
+					print_test_passed ("prunable_non_empty_array")
 				else
 					print_test_not_passed ("prunable_non_empty_array")
 				end
@@ -536,24 +536,24 @@ feature
 print_new_line
 			--Prints a new line character
 			do
-				print("%N")
+				print ("%N")
 			end
 
-print_test_passed(a_test_name: STRING)
+print_test_passed (a_test_name: STRING)
 			do
-				print(a_test_name + " test passed%N")
+				print (a_test_name + " test passed%N")
 			end
 
-print_test_not_passed(a_test_name: STRING)
+print_test_not_passed (a_test_name: STRING)
 			do
-				print(a_test_name + " test not passed%N")
+				print (a_test_name + " test not passed%N")
 			end
 
 print_header
 			-- Prints the header for the test suite
 			do
-				print("------------------------%N")
-				print("Running Array Test Suite%N")
-				print("------------------------%N")
+				print ("------------------------%N")
+				print ("Running Array Test Suite%N")
+				print ("------------------------%N")
 			end
 end
