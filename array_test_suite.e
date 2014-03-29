@@ -444,11 +444,10 @@ test_valid_index_empty_array
 				array: ARRAY[INTEGER]
 			do
 				create array.make_empty
-				if not array.valid_index (-999) then
-					utilities.print_test_passed ("valid_index_empty_array")
-				else
-					utilities.print_test_not_passed ("valid_index_empty_array")
+				check
+					not array.valid_index (-999)
 				end
+				utilities.print_test_passed ("valid_index_empty_array")
 			end
 
 test_valid_index_within_bounds
@@ -457,11 +456,10 @@ test_valid_index_within_bounds
 				array: ARRAY[INTEGER]
 			do
 				create array.make_filled (default_value, -999, 1000)
-				if (array.valid_index (-999) and array.valid_index (1000) and array.valid_index (500)) then
-					utilities.print_test_passed ("valid_index_within_bounds")
-				else
-					utilities.print_test_not_passed ("valid_index_within_bounds")
+				check
+					(array.valid_index (-999) and array.valid_index (1000) and array.valid_index (500))
 				end
+				utilities.print_test_passed ("valid_index_within_bounds")
 			end
 
 test_valid_index_not_within_bounds
@@ -470,11 +468,10 @@ test_valid_index_not_within_bounds
 				array: ARRAY[INTEGER]
 			do
 				create array.make_filled (default_value, -999, 1000)
-				if not array.valid_index (-9999) then
-					utilities.print_test_passed ("valid_index_not_within_bounds")
-				else
-					utilities.print_test_not_passed ("valid_index_not_within_bounds")
-				end
+			check
+				not array.valid_index (-9999)
+			end
+			utilities.print_test_passed ("valid_index_not_within_bounds")
 			end
 
 test_extendible_empty_array
@@ -483,11 +480,10 @@ test_extendible_empty_array
 				array: ARRAY[INTEGER]
 			do
 				create array.make_empty
-				if not array.extendible then
-					utilities.print_test_passed ("extendible_empty_array")
-				else
-					utilities.print_test_not_passed ("extendible_empty_array")
+				check
+					not array.extendible
 				end
+				utilities.print_test_passed ("extendible_empty_array")
 			end
 
 test_extendible_non_empty_array
@@ -496,11 +492,10 @@ test_extendible_non_empty_array
 				array: ARRAY[INTEGER]
 			do
 				create array.make_from_array (default_array)
-				if not array.extendible then
-					utilities.print_test_passed ("extendible_non_empty_array")
-				else
-					utilities.print_test_not_passed ("extendible_non_empty_array")
+				check
+					not array.extendible
 				end
+				utilities.print_test_passed ("extendible_non_empty_array")
 			end
 
 test_prunable_empty_array
@@ -509,11 +504,10 @@ test_prunable_empty_array
 				array: ARRAY[INTEGER]
 			do
 				create array.make_empty
-				if not array.prunable then
-					utilities.print_test_passed ("prunable_empty_array")
-				else
-					utilities.print_test_not_passed ("prunable_empty_array")
+				check
+					not array.prunable
 				end
+				utilities.print_test_passed ("prunable_empty_array")
 			end
 
 test_prunable_non_empty_array
@@ -522,11 +516,10 @@ test_prunable_non_empty_array
 				array: ARRAY[INTEGER]
 			do
 				create array.make_from_array (default_array)
-				if not array.prunable then
-					utilities.print_test_passed ("prunable_non_empty_array")
-				else
-					utilities.print_test_not_passed ("prunable_non_empty_array")
+				check
+					not array.prunable
 				end
+				utilities.print_test_passed ("prunable_non_empty_array")
 			end
 
 test_resizable
@@ -541,11 +534,10 @@ test_valid_index_set_empty_array
 				array: ARRAY[INTEGER]
 			do
 				create array.make_empty
-				if array.valid_index_set then
-					utilities.print_test_passed ("valid_index_set_empty_array")
-				else
-					utilities.print_test_not_passed ("valid_index_set_empty_array")
+				check
+					array.valid_index_set
 				end
+				utilities.print_test_passed ("valid_index_set_empty_array")
 			end
 
 test_valid_index_set_non_empty_array
@@ -554,16 +546,14 @@ test_valid_index_set_non_empty_array
 				array: ARRAY[INTEGER]
 			do
 				create array.make_from_array (default_array)
-				if array.valid_index_set then
-					utilities.print_test_passed ("valid_index_set_non_empty_array")
-				else
-					utilities.print_test_not_passed ("valid_index_set_non_empty_array")
+				check
+					array.valid_index_set
 				end
+				utilities.print_test_passed ("valid_index_set_non_empty_array")
 			end
 
 feature
 			-- All helper features go here
-
 
 setup_default_array
 				-- Feature setups up default_array
