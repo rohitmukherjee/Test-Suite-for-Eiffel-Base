@@ -80,25 +80,32 @@ feature
 
 test_make_empty
 			-- Test for make_empty creation procedure
+		local
+			array: ARRAY[INTEGER]
 		do
-			create array_under_test.make_empty
-			print ("make_empty test passed%N")
-		ensure
-			array_under_test.is_empty = True
+			create array.make_empty
+				check
+					is_empty: array.is_empty
+				end
+			print_test_passed ("make_empty")
 		end
 
 test_make_filled
 			-- Test for make_filled creation procedure
+			local
+				array: ARRAY[INTEGER]
 			do
-				create array_under_test.make_filled (default_value, 0, 99)
-				print_test_passed ("make")
-			ensure
-				across array_under_test as element all element.item = default_value  end
+				create array.make_filled (default_value, -999, 1000)
+				check
+					across array_2 as element all element.item = default_value  end
+				end
+				print_test_passed ("make_filled")
 			end
 
 test_make_from_array
 			-- Test for make_from_array creation procedure
 			do
+				create array_under_test.make_filled (default_value, 0, 99)
 				create array_under_test_2.make_from_array (array_under_test)
 				print_test_passed ("make_from_array")
 			ensure
