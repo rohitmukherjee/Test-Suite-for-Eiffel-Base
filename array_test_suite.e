@@ -39,8 +39,10 @@ feature
 			test_is_equal_same_array
 			test_is_equal_equal_arrays
 			test_is_equal_unequal_arrays
-			test_all_default
+			test_all_default_true_case
+			-- TODO: Have to add test_all_default_false_case
 			test_filled_with
+			-- TODO: Have to add test_filled_with_false_case
 			test_full_empty_array
 			test_full_non_empty_array
 			test_same_items_same_array
@@ -178,77 +180,72 @@ test_put
 test_lower
 			-- Test lower attribute of ARRAY
 			local
-				array_under_lower_test: ARRAY[INTEGER]
+				array: ARRAY[INTEGER]
 			do
-				create array_under_lower_test.make_filled (default_value, -999, 1000)
-				if array_under_lower_test.lower = -999
-				then print_test_passed ("lower")
-				else
-					print_test_not_passed ("lower")
+				create array.make_filled (default_value, -999, 1000)
+				check
+					array.lower = -999
 				end
+				print_test_passed ("lower")
 			end
 
 test_upper
 			-- Test upper attribute of ARRAY
 			local
-				array_under_upper_test: ARRAY[INTEGER]
+				array: ARRAY[INTEGER]
 			do
-				create array_under_upper_test.make_filled (default_value, -999, 1000)
-				if array_under_upper_test.upper = 1000
-				then print_test_passed ("upper")
-				else
-					print_test_not_passed ("upper")
+				create array.make_filled (default_value, -999, 1000)
+				check
+					array.upper = 1000
 				end
+				print_test_passed ("higher")
 			end
 
 test_count
 			-- Test count attribute of ARRAY
 			local
-				array_under_count_test: ARRAY[INTEGER]
+				array: ARRAY[INTEGER]
 			do
-				create array_under_count_test.make_filled (default_value, -999, 1000)
-				if array_under_count_test.count = 2000
-				then print_test_passed ("count")
-				else
-					print_test_not_passed ("count")
+				create array.make_filled (default_value, -999, 1000)
+				check
+					array.count = 2000
 				end
+				print_test_passed ("count")
 			end
 
 test_capacity
 			-- Test capacity attribute of ARRAY
 			local
-				array_under_capacity_test: ARRAY[INTEGER]
+				array: ARRAY[INTEGER]
 			do
-				create array_under_capacity_test.make_filled (default_value, -999, 1000)
-				if array_under_capacity_test.capacity = 2000
-				then print_test_passed ("capacity")
-				else
-					print_test_not_passed ("capacity")
+				create array.make_filled (default_value, -999, 1000)
+				check
+					array.capacity = 2000
 				end
+				print_test_passed ("capacity")
 			end
 
 test_occurences
 			-- Test occurences feature of ARRAY
 			local
-				array_under_occurences_test: ARRAY[INTEGER]
+				array: ARRAY[INTEGER]
 				i: INTEGER
 			do
-				create array_under_occurences_test.make_filled (default_value, -999, 1000)
+				create array.make_filled (default_value, -999, 1000)
 				from
 					i := -999
 				until
 					i = 1000
 				loop
 					if i>=0
-					then array_under_occurences_test.put (1, i)
+					then array.put (1, i)
 					end
 					i := i + 1
 				end
-				if array_under_occurences_test.occurrences (1) = 1000
-				then print_test_passed ("occurences")
-				else
-					print_test_not_passed ("occurences")
+				check
+					array.occurrences (1) = 1000
 				end
+				print_test_passed ("occurences")
 			end
 
 test_index_set
@@ -259,10 +256,8 @@ test_index_set
 			do
 				create array_index_set.make_filled (default_value, -999, 1000)
 				index_set_returned := array_index_set.index_set
-				if (index_set_returned.upper = 1000 and index_set_returned.lower = -999) then
-					print_test_passed ("index_set")
-				else
-					print_test_not_passed ("index_set")
+				check
+					index_set_within_bounds: index_set_returned.upper = 1000 and index_set_returned.lower = -999
 				end
 			end
 
@@ -273,13 +268,13 @@ test_is_equal_same_array
 			-- At the moment, all three results are && -ed and then asserted. Will probably extract into
 			-- individual test cases with better naming conventions
 			local
-				array1: ARRAY[INTEGER]
+				array: ARRAY[INTEGER]
 			do
-				create array1.make_filled (default_value, -999, 1000)
-				if array1.is_equal (array1)
-					then print_test_passed ("is_equal_same_array")
-				else print_test_not_passed ("is_equal_same_array")
+				create array.make_filled (default_value, -999, 1000)
+				check
+					array.is_equal (array)
 				end
+				print_test_passed ("is_equal_same_array")
 			end
 
 test_is_equal_equal_arrays
@@ -294,9 +289,8 @@ test_is_equal_equal_arrays
 			do
 				create array1.make_filled (default_value, -999, 1000)
 				create array2.make_from_array (array1)
-				if array1.is_equal (array2)
-					then print_test_passed ("is_equal_equal_arrays")
-				else print_test_not_passed ("is_equal_equal_arrays")
+				check
+					both_arrays_should_contain_same_elements: array1.is_equal (array2)
 				end
 			end
 
@@ -312,23 +306,21 @@ test_is_equal_unequal_arrays
 			do
 				create array1.make_filled (default_value, -999, 1000)
 				create array2.make_filled (2 * default_value, -998, 1000)
-				if  not array1.is_equal (array2)
-					then print_test_passed ("is_equal_unequal_arrays")
-				else print_test_not_passed ("is_equal_unequal_arrays")
+				check
+					both_arrays_should_not_be_equal: not array1.is_equal (array2)
 				end
+				print_test_passed ("is_equal_unequal_arrays")
 			end
 
-test_all_default
+test_all_default_true_case
 			-- Test to check if an array contains all default_values
 			-- TODO: Test is failing although the array has default_values
 			local
 				array: ARRAY[INTEGER]
 			do
-				create array.make_filled (default_value, -999, 1000)
-				if array.all_default then
-					print_test_passed ("all_default")
-				else
-					print_test_not_passed ("all_default")
+				create array.make_filled (0, -999, 1000)
+				check
+					array_only_contains_default_values: array.all_default
 				end
 			end
 
@@ -338,10 +330,8 @@ test_filled_with
 				array: ARRAY[INTEGER]
 			do
 				create array.make_filled (default_value, -999, 1000)
-				if array.filled_with (default_value)
-				then print_test_passed ("filled_with")
-				else
-					print_test_not_passed ("filled_with")
+				check
+					array.filled_with (default_value)
 				end
 			end
 
