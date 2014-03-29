@@ -70,10 +70,10 @@ default_value: INTEGER
        Result := 37
     end
 
-array_under_test: ARRAY[INTEGER]
-array_under_test_2: ARRAY[INTEGER]
-array_under_test_3: ARRAY[INTEGER]
-array_under_test_4: ARRAY[INTEGER]
+default_array: ARRAY[INTEGER]
+default_array_2: ARRAY[INTEGER]
+default_array_3: ARRAY[INTEGER]
+default_array_4: ARRAY[INTEGER]
 
 feature
 			-- Tests for features
@@ -97,31 +97,36 @@ test_make_filled
 			do
 				create array.make_filled (default_value, -999, 1000)
 				check
-					across array_2 as element all element.item = default_value  end
+					across array as element all element.item = default_value  end
 				end
 				print_test_passed ("make_filled")
 			end
 
 test_make_from_array
 			-- Test for make_from_array creation procedure
+			local
+				array: ARRAY[INTEGER]
 			do
-				create array_under_test.make_filled (default_value, 0, 99)
-				create array_under_test_2.make_from_array (array_under_test)
+				setup_default_array
+				create array.make_from_array (default_array)
+			check
+				across array as element all element.item = default_value end
+			end
 				print_test_passed ("make_from_array")
-			ensure
-				across array_under_test_2 as element all element.item = default_value end
 			end
 
 test_make_from_special
 			-- Test for make_from_special creation procedure
 			local
+				array: ARRAY[INTEGER]
 				special: SPECIAL[INTEGER]
 			do
 				create special.make_filled (default_value, 100)
-				create array_under_test_3.make_from_special(special)
+				create array.make_from_special(special)
+			check
+				across array as element all element.item = default_value end
+			end
 				print_test_passed ("make_from_special")
-			ensure
-				across array_under_test_3 as element all element.item = default_value end
 			end
 
 test_make_from_cil
@@ -133,13 +138,15 @@ test_make_from_cil
 
 test_access
 			-- Test @ access functionality of ARRAY
+			local
+				array: ARRAY[INTEGER]
 			do
-				array_under_test.put ((array_under_test @ 1) * (array_under_test @ 2), 3)
-					if	array_under_test @ 3 = (default_value * default_value)
-					then print_test_passed ("@")
-					else
-					     print_test_not_passed ("@")
-					end
+				create array.make_from_array (default_array)
+				array.put ((array @ 1) * (array @ 2), 3)
+				check
+					array @ 3 = (default_value * default_value)
+				end
+				print_test_passed ("@")
 			end
 
 test_has
@@ -151,18 +158,21 @@ test_put
 			-- Test put functionality of ARRAY
 			local
 				i: INTEGER
+				array: ARRAY[INTEGER]
 			do
+				create array.make_from_array (default_array)
 				from
 				  i := 0
 				until
 				  i = 100
 				loop
-				  array_under_test_2.put (2 * default_value, i)
+				  array.put (2 * default_value, i)
 				  i := i + 1
 				end
+				check
+					across array as element all element.item = 2 * default_value end
+				end
 				print_test_passed ("put")
-			ensure
-				across array_under_test_2 as element all element.item = 2 * default_value end
 			end
 
 test_lower
@@ -353,7 +363,7 @@ test_full_non_empty_array
 			local
 				array: ARRAY[INTEGER]
 			do
-				create array.make_from_array (array_under_test)
+				create array.make_from_array (default_array)
 				if array.full then
 					print_test_passed ("full_non_empty_array")
 				else
@@ -471,7 +481,7 @@ test_extendible_non_empty_array
 			local
 				array: ARRAY[INTEGER]
 			do
-				create array.make_from_array (array_under_test)
+				create array.make_from_array (default_array)
 				if not array.extendible then
 					print_test_passed ("extendible_non_empty_array")
 				else
@@ -497,7 +507,7 @@ test_prunable_non_empty_array
 			local
 				array: ARRAY[INTEGER]
 			do
-				create array.make_from_array (array_under_test)
+				create array.make_from_array (default_array)
 				if not array.prunable then
 					print_test_passed ("prunable_non_empty_array")
 				else
@@ -529,7 +539,7 @@ test_valid_index_set_non_empty_array
 			local
 				array: ARRAY[INTEGER]
 			do
-				create array.make_from_array (array_under_test)
+				create array.make_from_array (default_array)
 				if array.valid_index_set then
 					print_test_passed ("valid_index_set_non_empty_array")
 				else
@@ -563,4 +573,10 @@ print_header
 				print ("Running Array Test Suite%N")
 				print ("------------------------%N")
 			end
+
+setup_default_array
+				-- Feature setups up default_array
+				do
+					create default_array.make_filled(default_value, 0, 99)
+				end
 end
