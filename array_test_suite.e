@@ -14,7 +14,8 @@ feature
 	run_all_tests
 
 		do
-			print_header
+			create utilities
+			utilities.print_header("Array")
 
 			-- Creation Procedure Tests
 			test_make_empty
@@ -40,9 +41,9 @@ feature
 			test_is_equal_equal_arrays
 			test_is_equal_unequal_arrays
 			test_all_default_true_case
-			-- TODO: Have to add test_all_default_false_case
-			test_filled_with
-			-- TODO: Have to add test_filled_with_false_case
+			test_all_default_false_case
+			test_filled_with_true_case
+			test_filled_with_false_case
 			test_full_empty_array
 			test_full_non_empty_array
 			test_same_items_same_array
@@ -73,9 +74,7 @@ default_value: INTEGER
     end
 
 default_array: ARRAY[INTEGER]
-default_array_2: ARRAY[INTEGER]
-default_array_3: ARRAY[INTEGER]
-default_array_4: ARRAY[INTEGER]
+utilities: UTILITIES
 
 feature
 			-- Tests for features
@@ -89,7 +88,7 @@ test_make_empty
 				check
 					is_empty: array.is_empty
 				end
-			print_test_passed ("make_empty")
+			utilities.print_test_passed ("make_empty")
 		end
 
 test_make_filled
@@ -101,7 +100,7 @@ test_make_filled
 				check
 					across array as element all element.item = default_value  end
 				end
-				print_test_passed ("make_filled")
+				utilities.print_test_passed ("make_filled")
 			end
 
 test_make_from_array
@@ -114,7 +113,7 @@ test_make_from_array
 			check
 				across array as element all element.item = default_value end
 			end
-				print_test_passed ("make_from_array")
+				utilities.print_test_passed ("make_from_array")
 			end
 
 test_make_from_special
@@ -128,7 +127,7 @@ test_make_from_special
 			check
 				across array as element all element.item = default_value end
 			end
-				print_test_passed ("make_from_special")
+				utilities.print_test_passed ("make_from_special")
 			end
 
 test_make_from_cil
@@ -148,7 +147,7 @@ test_access
 				check
 					array @ 3 = (default_value * default_value)
 				end
-				print_test_passed ("@")
+				utilities.print_test_passed ("@")
 			end
 
 test_has
@@ -174,7 +173,7 @@ test_put
 				check
 					across array as element all element.item = 2 * default_value end
 				end
-				print_test_passed ("put")
+				utilities.print_test_passed ("put")
 			end
 
 test_lower
@@ -186,7 +185,7 @@ test_lower
 				check
 					array.lower = -999
 				end
-				print_test_passed ("lower")
+				utilities.print_test_passed ("lower")
 			end
 
 test_upper
@@ -198,7 +197,7 @@ test_upper
 				check
 					array.upper = 1000
 				end
-				print_test_passed ("higher")
+				utilities.print_test_passed ("higher")
 			end
 
 test_count
@@ -210,7 +209,7 @@ test_count
 				check
 					array.count = 2000
 				end
-				print_test_passed ("count")
+				utilities.print_test_passed ("count")
 			end
 
 test_capacity
@@ -222,7 +221,7 @@ test_capacity
 				check
 					array.capacity = 2000
 				end
-				print_test_passed ("capacity")
+				utilities.print_test_passed ("capacity")
 			end
 
 test_occurences
@@ -245,7 +244,7 @@ test_occurences
 				check
 					array.occurrences (1) = 1000
 				end
-				print_test_passed ("occurences")
+				utilities.print_test_passed ("occurences")
 			end
 
 test_index_set
@@ -274,7 +273,7 @@ test_is_equal_same_array
 				check
 					array.is_equal (array)
 				end
-				print_test_passed ("is_equal_same_array")
+				utilities.print_test_passed ("is_equal_same_array")
 			end
 
 test_is_equal_equal_arrays
@@ -309,7 +308,7 @@ test_is_equal_unequal_arrays
 				check
 					both_arrays_should_not_be_equal: not array1.is_equal (array2)
 				end
-				print_test_passed ("is_equal_unequal_arrays")
+				utilities.print_test_passed ("is_equal_unequal_arrays")
 			end
 
 test_all_default_true_case
@@ -322,9 +321,23 @@ test_all_default_true_case
 				check
 					array_only_contains_default_values: array.all_default
 				end
+				utilities.print_test_passed ("all_default_true_case")
 			end
 
-test_filled_with
+test_all_default_false_case
+			-- Test to check the false case of all_default
+			local
+				array: ARRAY[INTEGER]
+			do
+				create array.make_filled (0, -999, 1000)
+				array.put (2*default_value,6)
+				check
+					array_does_not_only_contains_default_values: not array.all_default
+				end
+				utilities.print_test_passed ("all_default_false_case")
+			end
+
+test_filled_with_true_case
 			-- Test to check if an array is filled with a certain value
 			local
 				array: ARRAY[INTEGER]
@@ -333,6 +346,20 @@ test_filled_with
 				check
 					array.filled_with (default_value)
 				end
+				utilities.print_test_passed ("test_filled_with_true_case")
+			end
+
+test_filled_with_false_case
+			-- Test to check false result of filled_with feature of arrays
+			local
+				array: ARRAY[INTEGER]
+			do
+				create array.make_filled (default_value, -999, 1000)
+				array.put(2*default_value, 6)
+				check
+					not array.filled_with (default_value)
+				end
+				utilities.print_test_passed ("test_filled_with_false_case")
 			end
 
 test_full_empty_array
@@ -341,11 +368,10 @@ test_full_empty_array
 				array: ARRAY[INTEGER]
 			do
 				create array.make_empty
-				if array.full then
-					print_test_passed ("full_empty_array")
-				else
-					print_test_not_passed ("full_empty_array")
+				check
+					array.full
 				end
+				utilities.print_test_passed ("full_empty_array")
 			end
 
 test_full_non_empty_array
@@ -354,11 +380,10 @@ test_full_non_empty_array
 				array: ARRAY[INTEGER]
 			do
 				create array.make_from_array (default_array)
-				if array.full then
-					print_test_passed ("full_non_empty_array")
-				else
-					print_test_not_passed ("full_non_empty_array")
+				check
+					array.full
 				end
+				utilities.print_test_passed ("full_non_empty_array")
 			end
 
 test_same_items_same_array
@@ -368,13 +393,13 @@ test_same_items_same_array
 			-- At the moment, all three results are && -ed and then asserted. Will probably extract into
 			-- individual test cases with better naming conventions
 			local
-				array1: ARRAY[INTEGER]
+				array: ARRAY[INTEGER]
 			do
-				create array1.make_filled (default_value, -999, 1000)
-				if array1.same_items (array1)
-					then print_test_passed ("same_items_same_array")
-				else print_test_not_passed ("same_items_same_array")
+				create array.make_filled (default_value, -999, 1000)
+				check
+					array.same_items (array)
 				end
+				utilities.print_test_passed ("same_items_same_array")
 			end
 
 test_same_items_equal_arrays
@@ -389,10 +414,10 @@ test_same_items_equal_arrays
 			do
 				create array1.make_filled (default_value, -999, 1000)
 				create array2.make_from_array (array1)
-				if array1.same_items (array2)
-					then print_test_passed ("same_items_equal_arrays")
-				else print_test_not_passed ("same_items_equal_arrays")
+				check
+					array1.same_items (array2)
 				end
+				utilities.print_test_passed ("same_items_equal_arrays")
 			end
 
 test_same_items_unequal_arrays
@@ -407,12 +432,11 @@ test_same_items_unequal_arrays
 			do
 				create array1.make_filled (default_value, -999, 1000)
 				create array2.make_filled (2 * default_value, -998, 1000)
-				if  not array1.same_items (array2)
-					then print_test_passed ("same_items_unequal_arrays")
-				else print_test_not_passed ("same_items_unequal_arrays")
+				check
+					not array1.same_items (array2)
 				end
+				utilities.print_test_passed ("same_items_unequal_arrays")
 			end
-
 
 test_valid_index_empty_array
 			-- Tests valid_index feature of an empty array
@@ -421,9 +445,9 @@ test_valid_index_empty_array
 			do
 				create array.make_empty
 				if not array.valid_index (-999) then
-					print_test_passed ("valid_index_empty_array")
+					utilities.print_test_passed ("valid_index_empty_array")
 				else
-					print_test_not_passed ("valid_index_empty_array")
+					utilities.print_test_not_passed ("valid_index_empty_array")
 				end
 			end
 
@@ -434,9 +458,9 @@ test_valid_index_within_bounds
 			do
 				create array.make_filled (default_value, -999, 1000)
 				if (array.valid_index (-999) and array.valid_index (1000) and array.valid_index (500)) then
-					print_test_passed ("valid_index_within_bounds")
+					utilities.print_test_passed ("valid_index_within_bounds")
 				else
-					print_test_not_passed ("valid_index_within_bounds")
+					utilities.print_test_not_passed ("valid_index_within_bounds")
 				end
 			end
 
@@ -447,9 +471,9 @@ test_valid_index_not_within_bounds
 			do
 				create array.make_filled (default_value, -999, 1000)
 				if not array.valid_index (-9999) then
-					print_test_passed ("valid_index_not_within_bounds")
+					utilities.print_test_passed ("valid_index_not_within_bounds")
 				else
-					print_test_not_passed ("valid_index_not_within_bounds")
+					utilities.print_test_not_passed ("valid_index_not_within_bounds")
 				end
 			end
 
@@ -460,9 +484,9 @@ test_extendible_empty_array
 			do
 				create array.make_empty
 				if not array.extendible then
-					print_test_passed ("extendible_empty_array")
+					utilities.print_test_passed ("extendible_empty_array")
 				else
-					print_test_not_passed ("extendible_empty_array")
+					utilities.print_test_not_passed ("extendible_empty_array")
 				end
 			end
 
@@ -473,9 +497,9 @@ test_extendible_non_empty_array
 			do
 				create array.make_from_array (default_array)
 				if not array.extendible then
-					print_test_passed ("extendible_non_empty_array")
+					utilities.print_test_passed ("extendible_non_empty_array")
 				else
-					print_test_not_passed ("extendible_non_empty_array")
+					utilities.print_test_not_passed ("extendible_non_empty_array")
 				end
 			end
 
@@ -486,9 +510,9 @@ test_prunable_empty_array
 			do
 				create array.make_empty
 				if not array.prunable then
-					print_test_passed ("prunable_empty_array")
+					utilities.print_test_passed ("prunable_empty_array")
 				else
-					print_test_not_passed ("prunable_empty_array")
+					utilities.print_test_not_passed ("prunable_empty_array")
 				end
 			end
 
@@ -499,9 +523,9 @@ test_prunable_non_empty_array
 			do
 				create array.make_from_array (default_array)
 				if not array.prunable then
-					print_test_passed ("prunable_non_empty_array")
+					utilities.print_test_passed ("prunable_non_empty_array")
 				else
-					print_test_not_passed ("prunable_non_empty_array")
+					utilities.print_test_not_passed ("prunable_non_empty_array")
 				end
 			end
 
@@ -518,9 +542,9 @@ test_valid_index_set_empty_array
 			do
 				create array.make_empty
 				if array.valid_index_set then
-					print_test_passed ("valid_index_set_empty_array")
+					utilities.print_test_passed ("valid_index_set_empty_array")
 				else
-					print_test_not_passed ("valid_index_set_empty_array")
+					utilities.print_test_not_passed ("valid_index_set_empty_array")
 				end
 			end
 
@@ -531,38 +555,15 @@ test_valid_index_set_non_empty_array
 			do
 				create array.make_from_array (default_array)
 				if array.valid_index_set then
-					print_test_passed ("valid_index_set_non_empty_array")
+					utilities.print_test_passed ("valid_index_set_non_empty_array")
 				else
-					print_test_not_passed ("valid_index_set_non_empty_array")
+					utilities.print_test_not_passed ("valid_index_set_non_empty_array")
 				end
 			end
 
 feature
 			-- All helper features go here
 
-print_new_line
-			--Prints a new line character
-			do
-				print ("%N")
-			end
-
-print_test_passed (a_test_name: STRING)
-			do
-				print (a_test_name + " test passed%N")
-			end
-
-print_test_not_passed (a_test_name: STRING)
-			do
-				print (a_test_name + " test not passed%N")
-			end
-
-print_header
-			-- Prints the header for the test suite
-			do
-				print ("------------------------%N")
-				print ("Running Array Test Suite%N")
-				print ("------------------------%N")
-			end
 
 setup_default_array
 				-- Feature setups up default_array
