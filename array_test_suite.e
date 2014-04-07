@@ -142,6 +142,7 @@ test_access
 			local
 				array: ARRAY[INTEGER]
 			do
+				setup_default_array
 				create array.make_from_array (default_array)
 				array.put ((array @ 1) * (array @ 2), 3)
 				check
@@ -161,6 +162,7 @@ test_put
 				i: INTEGER
 				array: ARRAY[INTEGER]
 			do
+				setup_default_array
 				create array.make_from_array (default_array)
 				from
 				  i := 0
@@ -379,6 +381,7 @@ test_full_non_empty_array
 			local
 				array: ARRAY[INTEGER]
 			do
+				setup_default_array
 				create array.make_from_array (default_array)
 				check
 					array.full
@@ -491,6 +494,7 @@ test_extendible_non_empty_array
 			local
 				array: ARRAY[INTEGER]
 			do
+				setup_default_array
 				create array.make_from_array (default_array)
 				check
 					not array.extendible
@@ -515,6 +519,7 @@ test_prunable_non_empty_array
 			local
 				array: ARRAY[INTEGER]
 			do
+				setup_default_array
 				create array.make_from_array (default_array)
 				check
 					not array.prunable
@@ -545,6 +550,7 @@ test_valid_index_set_non_empty_array
 			local
 				array: ARRAY[INTEGER]
 			do
+				setup_default_array
 				create array.make_from_array (default_array)
 				check
 					array.valid_index_set
