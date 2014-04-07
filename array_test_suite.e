@@ -49,7 +49,7 @@ feature
 			test_same_items_same_array
 			test_same_items_equal_arrays
 			test_same_items_unequal_arrays
-			test_valid_index_empty_array --TODO
+			test_valid_index_empty_array
 			test_valid_index_within_bounds
 			test_valid_index_not_within_bounds
 			test_extendible_empty_array
@@ -62,6 +62,15 @@ feature
 
 			-- Element Change Tests
 			test_put
+
+			-- Removal Tests
+			test_discard_items
+			test_clear_all
+			test_keep_head_valid_case
+--			test_keep_head
+--			test_keep_tail
+--			test_remove_head
+--			test_remove_tail
 		end
 
 
@@ -315,7 +324,6 @@ test_is_equal_unequal_arrays
 
 test_all_default_true_case
 			-- Test to check if an array contains all default_values
-			-- TODO: Test is failing although the array has default_values
 			local
 				array: ARRAY[INTEGER]
 			do
@@ -557,6 +565,54 @@ test_valid_index_set_non_empty_array
 				end
 				utilities.print_test_passed ("valid_index_set_non_empty_array")
 			end
+
+test_discard_items
+			-- Test resets all elements of array to their default values
+			local
+				array: ARRAY[INTEGER]
+			do
+				setup_default_array
+				create array.make_from_array (default_array)
+				array.discard_items
+				check
+					across array as element all element.item = 0  end
+				end
+				utilities.print_test_passed ("discard_items")
+			end
+
+test_clear_all
+			-- Test resets all elements of array to their default values
+			local
+				array: ARRAY[INTEGER]
+			do
+				setup_default_array
+				create array.make_from_array (default_array)
+				array.clear_all
+				check
+					across array as element all element.item = 0  end
+				end
+				utilities.print_test_passed ("clear_all")
+			end
+
+test_keep_head_valid_case
+			-- Test removes all elements except the first 'n'
+			local
+				array: ARRAY[INTEGER]
+			do
+				setup_default_array
+				create array.make_from_array (default_array)
+				array.keep_head (1)
+				check
+					new_size_is_correct: array.count = 1
+					contents_are_correct: array.at (0) = default_value
+				end
+				utilities.print_test_passed ("keep_head_valid_case")
+			end
+
+--			TODO
+--			test_keep_tail
+--			test_remove_head
+--			test_remove_tail
 
 feature
 			-- All helper features go here
