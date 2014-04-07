@@ -78,9 +78,19 @@ feature
 			test_grow
 			test_conservative_resize_with_default_grow
 			test_conservative_resize_with_default_same_size
+			test_trim --TODO
 			test_rebase
+				-- Iteration
+
 				-- Conversion Tests
+			test_toc -- TODO
+			test_to_cil -- TODO
+			test_to_special --TODO
+			test_linear_representation --TODO
+
 				-- Duplication Tests
+			test_copy
+			test_sub_array
 		end
 
 feature
@@ -773,6 +783,61 @@ feature
 				check_new_bounds: array.lower = 999 and array.upper = 1098
 			end
 			utilities.print_test_passed ("test_rebase")
+		end
+
+	test_trim
+			--TODO
+		do
+		end
+
+	test_toc
+			--TODO
+		do
+		end
+
+	test_to_cil
+			-- TODO
+		do
+		end
+
+	test_to_special
+			--TODO
+		do
+		end
+
+	test_linear_representation
+			--TODO
+		do
+		end
+
+	test_copy
+			-- tests copy feature of an array
+		local
+			array: ARRAY [INTEGER]
+		do
+			setup_default_array
+			create array.make_empty
+			array.copy (default_array)
+			check
+				size_is_correct: array.capacity = default_array.capacity
+				elements_are_correct: across array as element all element.item = default_value end
+			end
+			utilities.print_test_passed ("array copy test passed")
+		end
+
+	test_sub_array
+			-- test creates a suba array from default_array
+		local
+			array: ARRAY [INTEGER]
+		do
+			setup_default_array
+			create array.make_empty
+			array := default_array.subarray (1, 50)
+			check
+				size_is_correct: array.capacity = 50
+				elements_are_correct: across array as element all element.item = default_value end
+			end
+			utilities.print_test_passed ("test_sub_array")
 		end
 
 feature
