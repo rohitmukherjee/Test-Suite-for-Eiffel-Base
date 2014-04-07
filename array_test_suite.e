@@ -75,6 +75,10 @@ feature
 			test_remove_tail_invalid_case
 
 				-- Resizing Tests
+			test_grow
+			test_conservative_resize_with_default_grow
+			test_conservative_resize_with_default_same_size
+			test_rebase
 				-- Conversion Tests
 				-- Duplication Tests
 		end
@@ -711,6 +715,64 @@ feature
 				new_size_is_correct: array.is_empty
 			end
 			utilities.print_test_passed ("remove_tail_invalid_case")
+		end
+
+	test_grow
+			-- Tries to grow an empty array
+		local
+			array: ARRAY [INTEGER]
+		do
+			create array.make_empty
+			array.grow (5)
+			check
+				array.capacity = 5
+				across array as element all element.item = 0 end
+			end
+			utilities.print_test_passed ("test_grow")
+		end
+
+	test_conservative_resize_with_default_grow
+			-- Tries to grow
+		local
+			array: ARRAY [INTEGER]
+		do
+			setup_default_array
+			create array.make_from_array (default_array)
+			array.conservative_resize_with_default (300, -1, 100)
+			check
+				new_size: array.capacity = 102
+				new_elements: array @ -1 = 300 and array @ 100 = 300 and array @ 2 = default_value
+			end
+			utilities.print_test_passed ("test_conservative_resize_with_default_grow")
+		end
+
+	test_conservative_resize_with_default_same_size
+			-- Tries to resize to the same size
+		local
+			array: ARRAY [INTEGER]
+		do
+			setup_default_array
+			create array.make_from_array (default_array)
+			array.conservative_resize_with_default (1, 0, 99)
+			check
+				new_size: array.capacity = 100
+				across array as element all element.item = default_value end
+			end
+			utilities.print_test_passed ("test_conservative_resize_with_default_same_size")
+		end
+
+	test_rebase
+			-- Rebases an array
+		local
+			array: ARRAY [INTEGER]
+		do
+			setup_default_array
+			create array.make_from_array (default_array)
+			array.rebase (999)
+			check
+				check_new_bounds: array.lower = 999 and array.upper = 1098
+			end
+			utilities.print_test_passed ("test_rebase")
 		end
 
 feature
