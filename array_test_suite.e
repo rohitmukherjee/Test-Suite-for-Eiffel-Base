@@ -91,11 +91,14 @@ feature
 			test_rebase
 
 				-- Iteration
-			test_do_all
-			test_do_if
+			test_do_all --TODO
+			test_do_if --TODO
 			test_there_exists_true_case
-			test_do_all_with_index
-			test_do_if_with_index
+			test_there_exists_false_case
+			test_for_all_true_case
+			test_for_all_false_case
+			test_do_all_with_index --TODO
+			test_do_if_with_index --TODO
 
 				-- Conversion Tests
 			test_toc -- TODO
@@ -941,7 +944,13 @@ feature
 		do
 			setup_default_array
 			create array.make_from_array (default_array)
-				--		 	array.do_all (default_procedure_double)
+				--			array.do_all (agent(value: INTEGER) do
+				--				value := 2 * value
+				--				end)
+			check
+				--				across array as element all element.item = 2 * default_value end
+			end
+			utilities.print_test_passed ("test_do_all")
 		end
 
 	test_do_if
@@ -955,7 +964,59 @@ feature
 			setup_default_array
 			create array.make_from_array (default_array)
 			array.put (2 * default_value, 5)
-				--		array.there_exists ()
+			check
+				array.there_exists (agent  (value: INTEGER): BOOLEAN
+					do
+						Result := value = (2 * default_value)
+					end)
+			end
+			utilities.print_test_passed ("test_there_exists_true_case")
+		end
+
+	test_there_exists_false_case
+		local
+			array: ARRAY [INTEGER]
+		do
+			setup_default_array
+			create array.make_from_array (default_array)
+			check
+				not array.there_exists (agent  (value: INTEGER): BOOLEAN
+					do
+						Result := value = (2 * default_value)
+					end)
+			end
+			utilities.print_test_passed ("test_there_exists_false_case")
+		end
+
+	test_for_all_true_case
+		local
+			array: ARRAY [INTEGER]
+		do
+			setup_default_array
+			create array.make_from_array (default_array)
+			check
+				array.for_all (agent  (value: INTEGER): BOOLEAN
+					do
+						Result := (value = default_value)
+					end)
+			end
+			utilities.print_test_passed ("test_for_all_true_case")
+		end
+
+	test_for_all_false_case
+		local
+			array: ARRAY [INTEGER]
+		do
+			setup_default_array
+			create array.make_from_array (default_array)
+			array.put (2 * default_value, 5)
+			check
+				not array.for_all (agent  (value: INTEGER): BOOLEAN
+					do
+						Result := value = default_value
+					end)
+			end
+			utilities.print_test_passed ("test_for_all_false_case")
 		end
 
 	test_do_all_with_index
