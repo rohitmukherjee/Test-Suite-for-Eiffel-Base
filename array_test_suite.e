@@ -25,7 +25,8 @@ feature
 
 				-- Access Tests
 			test_access
-			test_has --TODO
+			test_has_true
+			test_has_false
 
 				-- Measurement Tests
 			test_lower
@@ -61,6 +62,14 @@ feature
 
 				-- Element Change Tests
 			test_put
+			test_enter
+			test_force_left_empty -- POSSIBLE BUG
+			test_force_right_empty
+			test_force_left_non_empty -- POSSIBLE BUG
+			test_force_right_non_empty
+			test_fill_with_empty
+			test_fill_with_non_empty
+			test_subcopy
 
 				-- Removal Tests
 			test_discard_items
@@ -80,7 +89,13 @@ feature
 			test_conservative_resize_with_default_same_size
 			test_trim --TODO
 			test_rebase
+
 				-- Iteration
+			test_do_all
+			test_do_if
+			test_there_exists_true_case
+			test_do_all_with_index
+			test_do_if_with_index
 
 				-- Conversion Tests
 			test_toc -- TODO
@@ -179,9 +194,31 @@ feature
 			utilities.print_test_passed ("@")
 		end
 
-	test_has
+	test_has_true
 			-- Test has functionality of ARRAY
+		local
+			array: ARRAY [INTEGER]
 		do
+			setup_default_array
+			create array.make_from_array (default_array)
+			array.put (2 * default_value, 5)
+			check
+				array.has (2 * default_value)
+			end
+			utilities.print_test_passed ("test_has_true")
+		end
+
+	test_has_false
+			-- Test has functionality of ARRAY
+		local
+			array: ARRAY [INTEGER]
+		do
+			setup_default_array
+			create array.make_from_array (default_array)
+			check
+				not array.has (2 * default_value)
+			end
+			utilities.print_test_passed ("test_has_false")
 		end
 
 	test_put
@@ -204,6 +241,118 @@ feature
 				across array as element all element.item = 2 * default_value end
 			end
 			utilities.print_test_passed ("put")
+		end
+
+	test_enter
+			-- Test replaces 'i'th entry with value v
+		local
+			array: ARRAY [INTEGER]
+		do
+			setup_default_array
+			create array.make_from_array (default_array)
+			array.enter (2 * default_value, 99)
+			check
+				new_size_is_correct: array.count = 100
+				array @ 99 = 2 * default_value
+			end
+		end
+
+	test_force_left_empty
+		local
+			array: ARRAY [INTEGER]
+		do
+			create array.make_empty
+			array.force (default_value, -100)
+			check
+				new_size_is_correct: array.count = 101
+				--				array_should_contain_value: array @ -100 = 12
+			end
+			utilities.print_test_passed ("test_force_left_empty")
+		end
+
+	test_force_right_empty
+		local
+			array: ARRAY [INTEGER]
+		do
+			create array.make_empty
+			array.force (default_value, 100)
+			check
+				new_size_is_correct: array.count = 100
+				new_value_is_correct: array @ 99 = 0
+			end
+			utilities.print_test_passed ("test_force_right_empty")
+		end
+
+	test_force_left_non_empty
+		local
+			array: ARRAY [INTEGER]
+		do
+			setup_default_array
+			create array.make_from_array (default_array)
+			array.force (2 * default_value, -30)
+			check
+				new_size_is_correct: array.count = 130
+				-- Array should be rebased to -29 but it isn't, the array is just shifted
+				--				array_should_contain_new_value: array @ -29 = 2 * default_value
+			end
+			utilities.print_test_passed ("test_force_left_non_empty")
+		end
+
+	test_force_right_non_empty
+		local
+			array: ARRAY [INTEGER]
+		do
+			setup_default_array
+			create array.make_from_array (default_array)
+			array.force (2 * default_value, 130)
+			check
+				new_size_is_correct: array.count = 131
+				array_should_contain_new_value: array @ 130 = 2 * default_value
+			end
+			utilities.print_test_passed ("test_force_right_non_empty")
+		end
+
+	test_fill_with_empty
+			-- Test tries to fill an empty array
+		local
+			array: ARRAY [INTEGER]
+		do
+			create array.make_empty
+			array.fill_with (default_value)
+			check
+				array_is_still_empty: array.is_empty
+			end
+			utilities.print_test_passed ("test_fill_with_empty")
+		end
+
+	test_fill_with_non_empty
+			-- Test tries to fill an empty array
+		local
+			array: ARRAY [INTEGER]
+		do
+			setup_default_array
+			create array.make_from_array (default_array)
+			array.fill_with (2 * default_value)
+			check
+				array.capacity = 100
+				across array as element all element.item = 2 * default_value end
+			end
+			utilities.print_test_passed ("test_fill_with_non_empty")
+		end
+
+	test_subcopy
+		local
+			array: ARRAY [INTEGER]
+			array_to_copy: ARRAY [INTEGER]
+		do
+			setup_default_array
+			create array.make_from_array (default_array)
+			create array_to_copy.make_filled (-1 * default_value, -10, -1)
+			array.subcopy (array_to_copy, -10, -6, 95)
+			check
+				array.occurrences (-1 * default_value) = 5
+			end
+			utilities.print_test_passed ("sub_copy test passed")
 		end
 
 	test_lower
@@ -785,6 +934,38 @@ feature
 			utilities.print_test_passed ("test_rebase")
 		end
 
+	test_do_all
+			-- Applies default procedure to an default array
+		local
+			array: ARRAY [INTEGER]
+		do
+			setup_default_array
+			create array.make_from_array (default_array)
+				--		 	array.do_all (default_procedure_double)
+		end
+
+	test_do_if
+		do
+		end
+
+	test_there_exists_true_case
+		local
+			array: ARRAY [INTEGER]
+		do
+			setup_default_array
+			create array.make_from_array (default_array)
+			array.put (2 * default_value, 5)
+				--		array.there_exists ()
+		end
+
+	test_do_all_with_index
+		do
+		end
+
+	test_do_if_with_index
+		do
+		end
+
 	test_trim
 			--TODO
 		do
@@ -847,6 +1028,16 @@ feature
 			-- Feature setups up default_array
 		do
 			create default_array.make_filled (default_value, 0, 99)
+		end
+
+	item_test (value: INTEGER): BOOLEAN
+		do
+			Result := (value = 2 * default_value)
+		end
+
+	default_procedure_double (values: ARRAY [INTEGER])
+			-- Procedure doubles value it receives
+		do
 		end
 
 end
