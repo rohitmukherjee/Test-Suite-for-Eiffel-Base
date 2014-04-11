@@ -21,7 +21,7 @@ feature
 			test_make_filled
 			test_make_from_array
 			test_make_from_special
-			test_make_from_cil --TODO
+			test_make_from_cil -- .NET
 
 				-- Access Tests
 			test_access
@@ -101,9 +101,9 @@ feature
 			test_do_if_with_index --TODO
 
 				-- Conversion Tests
-			test_toc -- TODO
-			test_to_cil -- TODO
-			test_to_special --TODO
+			test_toc -- .NET
+			test_to_cil -- .NET
+			test_to_special
 			test_linear_representation --TODO
 
 				-- Duplication Tests
@@ -178,9 +178,8 @@ feature
 		end
 
 	test_make_from_cil
-			-- Test for make_from_cil creation procedure
+			-- .NET
 		do
-				-- TODO		: Have to figure out how to test this with .NET
 		end
 
 	test_access
@@ -890,7 +889,7 @@ feature
 				array.capacity = 5
 				across array as element all element.item = 0 end
 			end
-			utilities.print_test_passed ("test_grow")
+			utilities.print_test_passed ("grow")
 		end
 
 	test_conservative_resize_with_default_grow
@@ -905,7 +904,7 @@ feature
 				new_size: array.capacity = 102
 				new_elements: array @ -1 = 300 and array @ 100 = 300 and array @ 2 = default_value
 			end
-			utilities.print_test_passed ("test_conservative_resize_with_default_grow")
+			utilities.print_test_passed ("conservative_resize_with_default_grow")
 		end
 
 	test_conservative_resize_with_default_same_size
@@ -920,7 +919,7 @@ feature
 				new_size: array.capacity = 100
 				across array as element all element.item = default_value end
 			end
-			utilities.print_test_passed ("test_conservative_resize_with_default_same_size")
+			utilities.print_test_passed ("conservative_resize_with_default_same_size")
 		end
 
 	test_rebase
@@ -934,7 +933,7 @@ feature
 			check
 				check_new_bounds: array.lower = 999 and array.upper = 1098
 			end
-			utilities.print_test_passed ("test_rebase")
+			utilities.print_test_passed ("rebase")
 		end
 
 	test_do_all
@@ -970,7 +969,7 @@ feature
 						Result := value = (2 * default_value)
 					end)
 			end
-			utilities.print_test_passed ("test_there_exists_true_case")
+			utilities.print_test_passed ("there_exists_true_case")
 		end
 
 	test_there_exists_false_case
@@ -985,7 +984,7 @@ feature
 						Result := value = (2 * default_value)
 					end)
 			end
-			utilities.print_test_passed ("test_there_exists_false_case")
+			utilities.print_test_passed ("there_exists_false_case")
 		end
 
 	test_for_all_true_case
@@ -1000,7 +999,7 @@ feature
 						Result := (value = default_value)
 					end)
 			end
-			utilities.print_test_passed ("test_for_all_true_case")
+			utilities.print_test_passed ("for_all_true_case")
 		end
 
 	test_for_all_false_case
@@ -1016,7 +1015,7 @@ feature
 						Result := value = default_value
 					end)
 			end
-			utilities.print_test_passed ("test_for_all_false_case")
+			utilities.print_test_passed ("for_all_false_case")
 		end
 
 	test_do_all_with_index
@@ -1033,18 +1032,28 @@ feature
 		end
 
 	test_toc
-			--TODO
+			--.NET
 		do
 		end
 
 	test_to_cil
-			-- TODO
+			-- .NET
 		do
 		end
 
 	test_to_special
-			--TODO
+		local
+			array: ARRAY [INTEGER]
+			special: SPECIAL [INTEGER]
 		do
+			setup_default_array
+			create array.make_from_array (default_array)
+			special := array.to_special
+			check
+				size_is_correct: special.capacity = 100
+				across special as element all element.item = default_value end
+			end
+			utilities.print_test_passed ("to_special")
 		end
 
 	test_linear_representation
@@ -1079,7 +1088,7 @@ feature
 				size_is_correct: array.capacity = 50
 				elements_are_correct: across array as element all element.item = default_value end
 			end
-			utilities.print_test_passed ("test_sub_array")
+			utilities.print_test_passed ("sub_array")
 		end
 
 feature
@@ -1095,10 +1104,4 @@ feature
 		do
 			Result := (value = 2 * default_value)
 		end
-
-	default_procedure_double (values: ARRAY [INTEGER])
-			-- Procedure doubles value it receives
-		do
-		end
-
 end
