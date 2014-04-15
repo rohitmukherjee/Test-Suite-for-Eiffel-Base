@@ -20,6 +20,14 @@ feature
 			test_make
 			test_make_filled
 			test_make_from_array
+
+				-- Access Feature Tests
+			test_area
+			test_item
+			test_first
+			test_last
+			test_index
+			test_cursor
 		end
 
 feature
@@ -85,4 +93,88 @@ feature
 			utilities.print_test_passed ("make_from_array")
 		end
 
+	test_area
+			-- Tests area access feature
+		local
+			list: ARRAYED_LIST [INTEGER]
+			special: SPECIAL [INTEGER]
+		do
+			create list.make_filled (default_size)
+			special := list.area
+			check
+				size_is_correct: special.count = default_size
+				across special as element all element.item = 0 end
+			end
+			utilities.print_test_passed ("area")
+		end
+
+	test_item
+			-- Tests item access feature
+		local
+			list: ARRAYED_LIST [INTEGER]
+		do
+			create list.make (default_size)
+			list.put_front (default_value)
+			check
+				list.item = default_value
+			end
+			utilities.print_test_passed ("item")
+		end
+
+	test_first
+			-- Tests item access feature
+		local
+			list: ARRAYED_LIST [INTEGER]
+		do
+			create list.make (default_size)
+			list.put_front (default_value)
+			list.put_right (2 * default_value)
+			check
+				list.first = default_value
+			end
+			utilities.print_test_passed ("first")
+		end
+
+	test_last
+			-- Tests item access feature
+		local
+			list: ARRAYED_LIST [INTEGER]
+		do
+			create list.make (default_size)
+			list.put_front (default_value)
+			list.put_left (default_value)
+			list.put_right (2 * default_value)
+			list.put_right (default_value)
+			check
+				list.last = 2 * default_value
+			end
+			utilities.print_test_passed ("last")
+		end
+
+	test_index
+			-- Tests index of current item
+		local
+			list: ARRAYED_LIST [INTEGER]
+		do
+			create list.make_filled (default_size)
+			list.put_front (default_value)
+			list.put_right (default_value)
+			check
+				list.index = 1
+			end
+			utilities.print_test_passed ("index")
+		end
+
+	test_cursor
+			-- Tests cursor position
+		local
+			list: ARRAYED_LIST [INTEGER]
+			cursor: ARRAYED_LIST_CURSOR
+		do
+			create list.make_filled (default_size)
+			list.put_front (default_value)
+			list.put_right (default_value)
+			cursor := list.cursor
+			utilities.print_test_passed ("cursor")
+		end
 end
