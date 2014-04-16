@@ -91,13 +91,13 @@ feature
 			test_rebase
 
 				-- Iteration
-			test_do_all --TODO
+			test_do_all
 			test_do_if --TODO
 			test_there_exists_true_case
 			test_there_exists_false_case
 			test_for_all_true_case
 			test_for_all_false_case
-			test_do_all_with_index --TODO
+			test_do_all_with_index
 			test_do_if_with_index --TODO
 
 				-- Conversion Tests
@@ -120,6 +120,10 @@ feature
 		end
 
 	default_array: ARRAY [INTEGER]
+
+	array_do_all: ARRAY [INTEGER]
+
+	array_do_all_indexer: INTEGER
 
 	utilities: UTILITIES
 
@@ -942,12 +946,16 @@ feature
 			array: ARRAY [INTEGER]
 		do
 			setup_default_array
+			create array_do_all.make_filled (0, 0, 99)
+			array_do_all_indexer := 0
 			create array.make_from_array (default_array)
-				--			array.do_all (agent(value: INTEGER) do
-				--				value := 2 * value
-				--				end)
+			array.do_all (agent  (value: INTEGER)
+				do
+					array_do_all.put (2 * value, array_do_all_indexer)
+					array_do_all_indexer := array_do_all_indexer + 1
+				end)
 			check
-				--				across array as element all element.item = 2 * default_value end
+				across array_do_all as element all element.item = 2 * default_value end
 			end
 			utilities.print_test_passed ("test_do_all")
 		end
@@ -1019,7 +1027,20 @@ feature
 		end
 
 	test_do_all_with_index
+		local
+			array: ARRAY [INTEGER]
 		do
+			setup_default_array
+			create array_do_all.make_filled (0, 0, 99)
+			create array.make_from_array (default_array)
+			array.do_all_with_index (agent  (value: INTEGER; index: INTEGER)
+				do
+					array_do_all.put (2 * value, index)
+				end)
+			check
+				across array_do_all as element all element.item = 2 * default_value end
+			end
+			utilities.print_test_passed ("test_do_all_with_index")
 		end
 
 	test_do_if_with_index
@@ -1104,4 +1125,10 @@ feature
 		do
 			Result := (value = 2 * default_value)
 		end
+
+	double_procedure (value: INTEGER; list: ARRAYED_LIST [INTEGER])
+		do
+			list.put_right (value)
+		end
+
 end
