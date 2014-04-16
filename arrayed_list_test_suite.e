@@ -28,6 +28,9 @@ feature
 			test_last
 			test_index
 			test_cursor
+			test_has_true_case
+			test_has_false_case
+			test_to_array -- POSSIBLE BUG
 		end
 
 feature
@@ -177,4 +180,56 @@ feature
 			cursor := list.cursor
 			utilities.print_test_passed ("cursor")
 		end
+
+	test_has_true_case
+			-- Tests case where arrayed_list has the element
+		local
+			list: ARRAYED_LIST [INTEGER]
+		do
+			create list.make (default_size)
+			list.put_front (default_value)
+			list.put_front (2 * default_value)
+			list.put_front (3 * default_value)
+			check
+				list.has (default_value)
+				list.has (2 * default_value)
+				list.has (3 * default_value)
+			end
+			utilities.print_test_passed ("has_true_case")
+		end
+
+	test_has_false_case
+			-- Tests case where arrayed_list doesn't have the element
+		local
+			list: ARRAYED_LIST [INTEGER]
+		do
+			create list.make (default_size)
+			list.put_front (default_value)
+			list.put_front (2 * default_value)
+			check
+				not list.has (3 * default_value)
+			end
+			utilities.print_test_passed ("has_false_case")
+		end
+
+	test_to_array
+			-- Tests to_array feature
+		local
+			list: ARRAYED_LIST [INTEGER]
+			array: ARRAY [INTEGER]
+		do
+			create list.make (default_size)
+			list.put_front (default_value)
+			list.put_front (default_value)
+			array := list.to_array
+			check
+				array.count = 2
+				list.capacity = default_size
+--				array.capacity = default_size
+				array.upper = list.upper
+				array.lower = list.lower
+			end
+			utilities.print_test_passed ("to_array")
+		end
+
 end
