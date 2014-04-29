@@ -31,6 +31,16 @@ feature
 			test_has_true_case
 			test_has_false_case
 			test_to_array -- POSSIBLE BUG
+
+				-- Iteration Tests
+			test_do_all
+			test_do_if
+			test_there_exists_true_case
+			test_there_exists_false_case
+			test_for_all_true_case
+			test_for_all_false_case
+			test_do_all_with_index
+			test_do_if_with_index
 		end
 
 feature
@@ -45,6 +55,14 @@ feature
 		once
 			Result := 37
 		end
+
+	list_do_all: ARRAYED_LIST [INTEGER]
+
+	list_do_if: ARRAYED_LIST [INTEGER]
+
+	list_do_all_with_index: ARRAYED_LIST [INTEGER]
+
+	list_do_if_with_index: ARRAYED_LIST [INTEGER]
 
 	utilities: UTILITIES
 
@@ -90,6 +108,8 @@ feature
 			create array.make_filled (default_value, 0, 99)
 			create list.make_from_array (array)
 			check
+				upper_is_correct: list.upper = array.count
+				lower_is_correct: list.lower = 1
 				size_is_correct: list.count = array.count
 				across list as element all element.item = default_value end
 			end
@@ -225,11 +245,170 @@ feature
 			check
 				array.count = 2
 				list.capacity = default_size
---				array.capacity = default_size
+					--				array.capacity = default_size
 				array.upper = list.upper
 				array.lower = list.lower
 			end
 			utilities.print_test_passed ("to_array")
+		end
+
+	test_do_all
+			-- Tests do_all feature of ARRAYED_LIST
+		local
+			list: ARRAYED_LIST [INTEGER]
+		do
+			create list.make (default_size)
+			list.put_front (default_value)
+			list.put_front (default_value)
+			list.put_front (default_value)
+			create list_do_all.make (default_size)
+			list.do_all (agent  (value: INTEGER)
+				do
+					list_do_all.put_front (2 * value)
+				end)
+			check
+				size_is_correct: list_do_all.count = list.count
+				across list_do_all as element all element.item = 2 * default_value end
+			end
+			utilities.print_test_passed ("do_all")
+		end
+
+	test_do_if
+			-- Tests do_if feature of ARRAYED_LIST
+		local
+			list: ARRAYED_LIST [INTEGER]
+		do
+			create list.make (default_size)
+			create list_do_if.make (default_size)
+			list.put_front (default_value)
+			list.put_front (default_value)
+			list.put_front (2 * default_value)
+			list.do_if (agent put_in_list_do_if(?), agent is_even(?))
+			check
+				size_is_correct: list_do_if.count = 1
+				list_do_if @ 1 = 2 * default_value
+			end
+			utilities.print_test_passed ("do_if")
+		end
+
+	test_there_exists_true_case
+			-- Tests there_exists feature of ARRAYED_LIST for true case
+		local
+			list: ARRAYED_LIST [INTEGER]
+		do
+			create list.make (default_size)
+			list.put_front (default_value)
+			list.put_front (default_value)
+			list.put_front (2 * default_value)
+			check
+				list.there_exists (agent is_even(?))
+			end
+			utilities.print_test_passed ("there_exists_true_case")
+		end
+
+	test_there_exists_false_case
+			-- Tests there_exists feature of ARRAYED_LIST for false case
+		local
+			list: ARRAYED_LIST [INTEGER]
+		do
+			create list.make (default_size)
+			list.put_front (default_value)
+			list.put_front (default_value)
+			check
+				not list.there_exists (agent is_even(?))
+			end
+			utilities.print_test_passed ("there_exists_false_case")
+		end
+
+	test_for_all_true_case
+			-- Tests for_all feature of ARRAYED_LIST for true case
+		local
+			list: ARRAYED_LIST [INTEGER]
+		do
+			create list.make (default_size)
+			list.put_front (2 * default_value)
+			list.put_front (2 * default_value)
+			check
+				list.for_all (agent is_even(?))
+			end
+			utilities.print_test_passed ("for_all_true_case")
+		end
+
+	test_for_all_false_case
+			-- Tests for_all feature of ARRAYED_LIST for true case
+		local
+			list: ARRAYED_LIST [INTEGER]
+		do
+			create list.make (default_size)
+			list.put_front (default_value)
+			list.put_front (2 * default_value)
+			check
+				not list.for_all (agent is_even(?))
+			end
+			utilities.print_test_passed ("for_all_false_case")
+		end
+
+	test_do_all_with_index
+			-- Tests do_all feature of ARRAYED_LIST
+		local
+			list: ARRAYED_LIST [INTEGER]
+		do
+			create list.make (default_size)
+			list.put_front (default_value)
+			list.put_front (default_value)
+			list.put_front (default_value)
+			create list_do_all_with_index.make_filled (default_size)
+			list.do_all_with_index (agent  (value: INTEGER; index: INTEGER)
+				do
+					list_do_all_with_index.put_i_th (2 * value, index)
+				end)
+			check
+				list_do_all_with_index @ 1 = 2 * default_value
+				list_do_all_with_index @ 1 = 2 * default_value
+				list_do_all_with_index @ 3 = 2 * default_value
+			end
+			utilities.print_test_passed ("do_all_with_index")
+		end
+
+	test_do_if_with_index
+			-- Tests do_if feature of ARRAYED_LIST
+		local
+			list: ARRAYED_LIST [INTEGER]
+		do
+			create list.make (default_size)
+			create list_do_if_with_index.make_filled (default_size)
+			list.put_front (default_value)
+			list.put_front (default_value)
+			list.put_front (2 * default_value)
+			list.do_if_with_index (agent put_in_list_do_if_with_index(?, ?), agent first_is_even(?, ?))
+			check
+				size_is_correct: list_do_if.count = 1
+				list_do_if @ 1 = 2 * default_value
+			end
+			utilities.print_test_passed ("do_if_with_index")
+		end
+
+feature
+	-- All helper features go here
+
+	is_even (a_value: INTEGER): BOOLEAN
+		do
+			Result := a_value \\ 2 = 0
+		end
+
+	first_is_even (a_value: INTEGER; a_index: INTEGER): BOOLEAN
+		do
+			Result := a_value \\ 2 = 0 and a_index = 1
+		end
+
+	put_in_list_do_if (a_value: INTEGER)
+		do
+			list_do_if.put_front (a_value)
+		end
+
+	put_in_list_do_if_with_index (a_value: INTEGER; a_index: INTEGER)
+		do
+			list_do_if_with_index.put_i_th (a_value, a_index)
 		end
 
 end
