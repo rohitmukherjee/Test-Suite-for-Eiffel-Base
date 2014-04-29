@@ -41,6 +41,12 @@ feature
 			test_for_all_false_case
 			test_do_all_with_index
 			test_do_if_with_index
+
+				-- Measurement Tests
+			test_lower
+			test_upper
+			test_count
+			test_capacity
 		end
 
 feature
@@ -386,6 +392,63 @@ feature
 				list_do_if @ 1 = 2 * default_value
 			end
 			utilities.print_test_passed ("do_if_with_index")
+		end
+
+	test_lower
+			-- Tests lower feature of ARRAYED_LIST
+			local
+				list: ARRAYED_LIST [INTEGER]
+			do
+				create list.make (default_size)
+				list.put_front (default_value)
+				list.put_front (default_value)
+				check
+					list.lower = 1
+				end
+				utilities.print_test_passed ("lower")
+			end
+
+	test_upper
+			-- Tests upper feature of ARRAYED_LIST
+			local
+				list: ARRAYED_LIST [INTEGER]
+			do
+				create list.make (default_size)
+				list.put_front (default_value)
+				list.put_front (default_value)
+				check
+					list.upper = 2
+					list.upper = list.count
+				end
+				utilities.print_test_passed ("upper")
+			end
+
+	test_count
+		-- Tests count feature of ARRAYED_LIST
+		local
+			list: ARRAYED_LIST [INTEGER]
+		do
+			create list.make (default_size)
+			list.put_front (default_value)
+			check
+				list.count = 1
+				list.count = list.upper
+				list.count = list.lower
+			end
+			utilities.print_test_passed ("count")
+		end
+
+	test_capacity
+		-- Tests count feature of ARRAYED_LIST
+		local
+			list: ARRAYED_LIST [INTEGER]
+		do
+			create list.make (default_size)
+			list.put_front (default_value)
+			check
+				list.capacity = default_size
+			end
+			utilities.print_test_passed ("capacity")
 		end
 
 feature
