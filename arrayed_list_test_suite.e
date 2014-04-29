@@ -47,6 +47,10 @@ feature
 			test_upper
 			test_count
 			test_capacity
+
+				-- Comparison Tests
+			test_is_equal_true_case
+			test_is_equal_false_case
 		end
 
 feature
@@ -450,6 +454,43 @@ feature
 			end
 			utilities.print_test_passed ("capacity")
 		end
+
+	test_is_equal_true_case
+		-- Tests true case of is_equal feature of ARRAYED_LIST
+		local
+			list1: ARRAYED_LIST [INTEGER]
+			list2: ARRAYED_LIST [INTEGER]
+		do
+			create list1.make (default_size)
+			create list2.make (default_size)
+			list1.put_front (default_value)
+			list2.put_front (default_value)
+			check
+				list1.is_equal (list1)
+				list2.is_equal (list2)
+				list1.is_equal (list2)
+				list2.is_equal (list1)
+			end
+			utilities.print_test_passed ("is_equal_true_case")
+		end
+
+		test_is_equal_false_case
+		-- Tests true case of is_equal feature of ARRAYED_LIST
+		local
+			list1: ARRAYED_LIST [INTEGER]
+			list2: ARRAYED_LIST [INTEGER]
+		do
+			create list1.make (default_size)
+			create list2.make (default_size)
+			list1.put_front (default_value)
+			list2.put_front (2 * default_value)
+			check
+				not list1.is_equal (list2)
+				not list2.is_equal (list1)
+			end
+			utilities.print_test_passed ("is_equal_false_case")
+		end
+
 
 feature
 	-- All helper features go here
