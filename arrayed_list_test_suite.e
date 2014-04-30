@@ -64,7 +64,7 @@ feature
 			test_all_default_false_case
 
 				-- Cursor Movement Tests
---			TODO, not sure how to check cursor movement
+				--			TODO, not sure how to check cursor movement
 
 				-- Element change Tests
 			test_put_front
@@ -80,6 +80,9 @@ feature
 			test_grow
 			test_resize
 			test_trim
+
+				-- Duplication Tests
+			test_copy
 		end
 
 feature
@@ -761,7 +764,7 @@ feature
 		end
 
 	test_grow
-		-- Tests grow feature of ARRAYED_LIST
+			-- Tests grow feature of ARRAYED_LIST
 		local
 			list: ARRAYED_LIST [INTEGER]
 		do
@@ -775,7 +778,7 @@ feature
 		end
 
 	test_resize
-		-- Tests resize feature of ARRAYED_LIST
+			-- Tests resize feature of ARRAYED_LIST
 		local
 			list: ARRAYED_LIST [INTEGER]
 		do
@@ -788,9 +791,8 @@ feature
 			utilities.print_test_passed ("resize")
 		end
 
-
 	test_trim
-		-- Tests trim feature of ARRAYED_LIST
+			-- Tests trim feature of ARRAYED_LIST
 		local
 			list: ARRAYED_LIST [INTEGER]
 		do
@@ -801,6 +803,29 @@ feature
 				list.capacity = list.count
 			end
 			utilities.print_test_passed ("trim")
+		end
+
+	test_copy
+			-- Tests copy feature of ARRAYED_LIST
+		local
+			list: ARRAYED_LIST [INTEGER]
+			list_copy: ARRAYED_LIST [INTEGER]
+		do
+			create list.make_filled (default_size)
+			create list_copy.make (default_size)
+			list.put_front (2 * default_value)
+			list.put_front (default_value)
+			list.copy (list)
+			list_copy.copy (list)
+			check
+				list.count = (default_size + 2)
+				list.lower = 1
+				list.upper = 12
+				list_copy.count = (default_size + 2)
+				list_copy.lower = 1
+				list_copy.upper = 12
+			end
+			utilities.print_test_passed ("copy")
 		end
 
 feature
