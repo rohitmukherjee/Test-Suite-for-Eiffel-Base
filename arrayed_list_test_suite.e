@@ -91,6 +91,15 @@ feature
 			test_remove_left
 			test_remove_right
 			test_wipe_out -- POSSIBLE BUG
+
+				-- Transformation Tests
+			test_swap
+
+				-- Retrieval Tests
+				--			test_mismatch -- TODO
+
+				-- Duplication Tests
+			test_duplicate
 		end
 
 feature
@@ -935,10 +944,53 @@ feature
 			list.wipe_out
 			check
 				list.count = 0
---				list.upper = 1  -- POSSIBLE BUG, UPPER IS 0 EVEN THOUGH LOWER IS 1
+					--				list.upper = 1  -- POSSIBLE BUG, UPPER IS 0 EVEN THOUGH LOWER IS 1
 				list.lower = 1
 			end
 			utilities.print_test_passed ("wipe_out")
+		end
+
+	test_swap
+			-- Tests swap feature of ARRAYED_LIST
+		local
+			list: ARRAYED_LIST [INTEGER]
+		do
+			create list.make_filled (default_size)
+			list.put_front (2 * default_value)
+			list.put_front (default_value)
+			list.go_i_th (1)
+			list.swap (6)
+			check
+				list @ 6 = default_value
+				list @ 1 = 0
+			end
+			utilities.print_test_passed ("swap")
+		end
+
+	test_duplicate
+			-- Tests duplicate feature of ARRAYED_LIST
+		local
+			list: ARRAYED_LIST [INTEGER]
+			list_duplicate: ARRAYED_LIST [INTEGER]
+		do
+			create list.make (default_size)
+			create list_duplicate.make (default_size)
+			list.put_front (default_value)
+			list.put_front (2 * default_value)
+			list.put_front (3 * default_value)
+			list.put_front (4 * default_value)
+			list.put_front (5 * default_value)
+			list.go_i_th (3)
+			list_duplicate := list.duplicate (3)
+			check
+				size_is_correct: list_duplicate.count = 3
+				list_duplicate @ 1 = list @ 3
+				list_duplicate @ 2 = list @ 4
+				list_duplicate @ 3 = list @ 5
+				list_duplicate.lower = 1
+				list_duplicate.upper = 3
+			end
+			utilities.print_test_passed ("duplicate")
 		end
 
 feature
