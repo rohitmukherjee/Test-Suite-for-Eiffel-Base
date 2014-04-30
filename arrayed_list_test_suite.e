@@ -51,6 +51,17 @@ feature
 				-- Comparison Tests
 			test_is_equal_true_case
 			test_is_equal_false_case
+
+				-- Status Report Tests
+			test_prunable
+			test_valid_cursor_true_case
+			test_valid_cursor_false_case
+			test_valid_index_true_case
+			test_valid_index_false_case
+			test_is_inserted_true_case
+			test_is_inserted_false_case -- POSSIBLE BUG
+			test_all_default_true_case
+			test_all_default_false_case
 		end
 
 feature
@@ -400,35 +411,35 @@ feature
 
 	test_lower
 			-- Tests lower feature of ARRAYED_LIST
-			local
-				list: ARRAYED_LIST [INTEGER]
-			do
-				create list.make (default_size)
-				list.put_front (default_value)
-				list.put_front (default_value)
-				check
-					list.lower = 1
-				end
-				utilities.print_test_passed ("lower")
+		local
+			list: ARRAYED_LIST [INTEGER]
+		do
+			create list.make (default_size)
+			list.put_front (default_value)
+			list.put_front (default_value)
+			check
+				list.lower = 1
 			end
+			utilities.print_test_passed ("lower")
+		end
 
 	test_upper
 			-- Tests upper feature of ARRAYED_LIST
-			local
-				list: ARRAYED_LIST [INTEGER]
-			do
-				create list.make (default_size)
-				list.put_front (default_value)
-				list.put_front (default_value)
-				check
-					list.upper = 2
-					list.upper = list.count
-				end
-				utilities.print_test_passed ("upper")
+		local
+			list: ARRAYED_LIST [INTEGER]
+		do
+			create list.make (default_size)
+			list.put_front (default_value)
+			list.put_front (default_value)
+			check
+				list.upper = 2
+				list.upper = list.count
 			end
+			utilities.print_test_passed ("upper")
+		end
 
 	test_count
-		-- Tests count feature of ARRAYED_LIST
+			-- Tests count feature of ARRAYED_LIST
 		local
 			list: ARRAYED_LIST [INTEGER]
 		do
@@ -443,7 +454,7 @@ feature
 		end
 
 	test_capacity
-		-- Tests count feature of ARRAYED_LIST
+			-- Tests count feature of ARRAYED_LIST
 		local
 			list: ARRAYED_LIST [INTEGER]
 		do
@@ -456,7 +467,7 @@ feature
 		end
 
 	test_is_equal_true_case
-		-- Tests true case of is_equal feature of ARRAYED_LIST
+			-- Tests true case of is_equal feature of ARRAYED_LIST
 		local
 			list1: ARRAYED_LIST [INTEGER]
 			list2: ARRAYED_LIST [INTEGER]
@@ -474,8 +485,8 @@ feature
 			utilities.print_test_passed ("is_equal_true_case")
 		end
 
-		test_is_equal_false_case
-		-- Tests true case of is_equal feature of ARRAYED_LIST
+	test_is_equal_false_case
+			-- Tests true case of is_equal feature of ARRAYED_LIST
 		local
 			list1: ARRAYED_LIST [INTEGER]
 			list2: ARRAYED_LIST [INTEGER]
@@ -491,6 +502,112 @@ feature
 			utilities.print_test_passed ("is_equal_false_case")
 		end
 
+	test_prunable
+			-- Tests prunable feature of ARRAYED_LIST
+		local
+			list: ARRAYED_LIST [INTEGER]
+		do
+			create list.make_filled (default_size)
+			check
+				list.prunable
+			end
+			utilities.print_test_passed ("prunable")
+		end
+
+	test_valid_cursor_true_case
+			-- Tests the valid_cursor feature of ARRAYED_LIST for true case
+		local
+			list: ARRAYED_LIST [INTEGER]
+			cursor: CURSOR
+		do
+			create list.make_filled (default_size)
+		end
+
+	test_valid_cursor_false_case
+			-- Tests the valid_cursor feature of ARRAYED_LIST for true case
+		local
+			list: ARRAYED_LIST [INTEGER]
+			cursor: CURSOR
+		do
+			create list.make_filled (default_size)
+		end
+
+	test_valid_index_true_case
+			-- Tests the valid_index feature of ARRAYED_LIST for true case
+		local
+			list: ARRAYED_LIST [INTEGER]
+		do
+			create list.make_filled (default_size)
+			check
+				list.valid_index (10)
+			end
+			utilities.print_test_passed ("valid_index_true_case")
+		end
+
+	test_valid_index_false_case
+			-- Tests the valid_index feature of ARRAYED_LIST for false case
+		local
+			list: ARRAYED_LIST [INTEGER]
+		do
+			create list.make (default_size)
+			check
+				not list.valid_index (10)
+			end
+			utilities.print_test_passed ("valid_index_false_case")
+		end
+
+	test_is_inserted_true_case
+			-- Tests the is_inserted feature of ARRAYED_LIST for true case
+		local
+			list: ARRAYED_LIST [INTEGER]
+		do
+			create list.make (default_size)
+			list.put_front (default_value)
+			list.put_right (2 * default_value)
+			check
+				list.is_inserted (2 * default_value)
+			end
+			utilities.print_test_passed ("is_inserted_true_case")
+		end
+
+	test_is_inserted_false_case
+			-- Tests the is_inserted feature of ARRAYED_LIST for true case
+		local
+			list: ARRAYED_LIST [INTEGER]
+		do
+			create list.make (default_size)
+			list.put_front (default_value)
+			list.put_right (2 * default_value)
+			check
+--				not list.is_inserted (default_value)
+			end
+			utilities.print_test_passed ("is_inserted_false_case")
+		end
+
+	test_all_default_true_case
+			-- Tests the all_default feature of ARRAYED_LIST for true case
+		local
+			list: ARRAYED_LIST [INTEGER]
+		do
+			create list.make_filled (default_size)
+			check
+				list.all_default
+			end
+			utilities.print_test_passed ("all_default_true_case")
+		end
+
+	test_all_default_false_case
+			-- Tests the all_default feature of ARRAYED_LIST for true case
+		local
+			list: ARRAYED_LIST [INTEGER]
+		do
+			create list.make_filled (default_size)
+			list.put_front (default_value)
+			check
+				not list.all_default
+			end
+			utilities.print_test_passed ("all_default_false_case")
+		end
 
 feature
 	-- All helper features go here
