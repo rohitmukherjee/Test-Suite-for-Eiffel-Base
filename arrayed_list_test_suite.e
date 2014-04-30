@@ -62,6 +62,16 @@ feature
 			test_is_inserted_false_case -- POSSIBLE BUG
 			test_all_default_true_case
 			test_all_default_false_case
+
+				-- Element change Tests
+			test_put_front
+			test_put_i_th
+			test_force
+			test_put_left
+			test_put_right
+			test_merge_left
+			test_merge_right
+			test_append
 		end
 
 feature
@@ -579,7 +589,7 @@ feature
 			list.put_front (default_value)
 			list.put_right (2 * default_value)
 			check
---				not list.is_inserted (default_value)
+				--				not list.is_inserted (default_value)
 			end
 			utilities.print_test_passed ("is_inserted_false_case")
 		end
@@ -607,6 +617,139 @@ feature
 				not list.all_default
 			end
 			utilities.print_test_passed ("all_default_false_case")
+		end
+
+	test_put_front
+			-- Tests the put_front feature of ARRAYED_LIST
+		local
+			list: ARRAYED_LIST [INTEGER]
+		do
+			create list.make (default_size)
+			list.put_front (default_value)
+			check
+				size_is_correct: list.count = 1
+				element_is_correct: list @ 1 = default_value
+			end
+			utilities.print_test_passed ("put_front")
+		end
+
+	test_put_i_th
+			-- Tests the put_ith feature of ARRAYED_LIST
+		local
+			list: ARRAYED_LIST [INTEGER]
+		do
+			create list.make (default_size)
+			list.put_front (default_value)
+			list.put_front (default_value)
+			list.put_i_th (2 * default_value, 2)
+			check
+				size_is_correct: list.count = 2
+				capacity_is_correct: list.capacity = default_size
+				element_is_correct: list @ 2 = 2 * default_value
+			end
+			utilities.print_test_passed ("put_i_th")
+		end
+
+	test_force
+			-- Tests the force/extend feature of ARRAYED_LIST
+		local
+			list: ARRAYED_LIST [INTEGER]
+		do
+			create list.make (2)
+			list.put_front (default_value)
+			list.put_front (default_value)
+			list.force (2 * default_value)
+			check
+				size_is_correct: list.count = 3
+				element_is_correct: list @ 3 = 2 * default_value
+			end
+			utilities.print_test_passed ("force")
+		end
+
+	test_put_left
+			-- Tests put_left feature of ARRAYED_LIST
+		local
+			list: ARRAYED_LIST [INTEGER]
+		do
+			create list.make (default_size)
+			list.put_front (default_value)
+			list.put_left (2 * default_value)
+			check
+				size_is_correct: list.count = 2
+				element_is_correct: list @ 1 = 2 * default_value
+			end
+			utilities.print_test_passed ("put_left")
+		end
+
+	test_put_right
+			-- Tests put_right feature of ARRAYED_LIST
+		local
+			list: ARRAYED_LIST [INTEGER]
+		do
+			create list.make (default_size)
+			list.put_right (default_value)
+			check
+				size_is_correct: list.count = 1
+				element_is_correct: list @ 1 = default_value
+			end
+			utilities.print_test_passed ("put_right")
+		end
+
+	test_merge_left
+			-- Tests merge_left feature of ARRAYED_LIST
+		local
+			list: ARRAYED_LIST [INTEGER]
+			list_to_copy: ARRAYED_LIST [INTEGER]
+		do
+			create list.make (default_size)
+			create list_to_copy.make_filled (default_size)
+			list.put_front (default_value)
+			list_to_copy.put_front (default_value)
+			list.merge_left (list_to_copy)
+			check
+				list.count = default_size + 2
+				list @ 12 = default_value
+				list @ 3 = 0
+			end
+			utilities.print_test_passed ("merge_left")
+		end
+
+	test_merge_right
+			-- Tests merge_left feature of ARRAYED_LIST
+		local
+			list: ARRAYED_LIST [INTEGER]
+			list_to_copy: ARRAYED_LIST [INTEGER]
+		do
+			create list.make (default_size)
+			create list_to_copy.make_filled (default_size)
+			list.put_front (default_value)
+			list_to_copy.put_front (default_value)
+			list.merge_right (list_to_copy)
+			check
+				list.count = default_size + 2
+				list @ 1 = default_value
+				list @ 3 = 0
+			end
+			utilities.print_test_passed ("merge_left")
+		end
+
+	test_append
+			-- Tests merge_left feature of ARRAYED_LIST
+		local
+			list: ARRAYED_LIST [INTEGER]
+			list_to_copy: ARRAYED_LIST [INTEGER]
+		do
+			create list.make (default_size)
+			create list_to_copy.make_filled (default_size)
+			list.put_front (default_value)
+			list_to_copy.put_front (default_value)
+			list.append (list_to_copy)
+			check
+				list.count = default_size + 2
+				list @ 1 = default_value
+				list @ 3 = 0
+			end
+			utilities.print_test_passed ("append")
 		end
 
 feature
