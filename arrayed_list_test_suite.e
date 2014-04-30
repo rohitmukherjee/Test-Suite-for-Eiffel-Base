@@ -83,6 +83,14 @@ feature
 
 				-- Duplication Tests
 			test_copy
+
+				-- Removal Tests
+			test_prune_on_cursor
+			test_prune_after_cursor
+			test_prune_all
+			test_remove_left
+			test_remove_right
+			test_wipe_out -- POSSIBLE BUG
 		end
 
 feature
@@ -673,6 +681,8 @@ feature
 			check
 				size_is_correct: list.count = 3
 				element_is_correct: list @ 3 = 2 * default_value
+				list.upper = list.count
+				list.lower = 1
 			end
 			utilities.print_test_passed ("force")
 		end
@@ -826,6 +836,109 @@ feature
 				list_copy.upper = 12
 			end
 			utilities.print_test_passed ("copy")
+		end
+
+	test_prune_on_cursor
+			-- Test prune feature of ARRAYED_LIST
+		local
+			list: ARRAYED_LIST [INTEGER]
+		do
+			create list.make_filled (default_size)
+			list.put_front (2 * default_value)
+			list.put_front (default_value)
+			list.prune (default_value)
+			check
+				list.count = default_size + 2
+				list @ 1 = default_value
+			end
+			utilities.print_test_passed ("prune_on_cursor")
+		end
+
+	test_prune_after_cursor
+			-- Test prune feature of ARRAYED_LIST
+		local
+			list: ARRAYED_LIST [INTEGER]
+		do
+			create list.make_filled (default_size)
+			list.put_front (2 * default_value)
+			list.put_front (default_value)
+			list.prune (2 * default_value)
+			check
+				list.count = default_size + 1
+				list @ 2 = 0
+			end
+			utilities.print_test_passed ("prune_after_cursor")
+		end
+
+	test_prune_all
+			-- Test prune_all feature of ARRAYED_LIST
+		local
+			list: ARRAYED_LIST [INTEGER]
+		do
+			create list.make_filled (default_size)
+			list.put_front (2 * default_value)
+			list.put_front (default_value)
+			list.prune_all (0)
+			check
+				list.count = 2
+				list @ 1 = default_value
+			end
+			utilities.print_test_passed ("prune_all")
+		end
+
+	test_remove_left
+			-- Test remove_left feature of ARRAYED_LIST
+		local
+			list: ARRAYED_LIST [INTEGER]
+		do
+			create list.make_filled (default_size)
+			list.put_front (2 * default_value)
+			list.put_front (default_value)
+			list.go_i_th (6)
+			list.remove_left
+			check
+				list.count = 11
+				list @ 1 = default_value
+				list.lower = 1
+				list.upper = 11
+			end
+			utilities.print_test_passed ("remove_left")
+		end
+
+	test_remove_right
+			-- Test remove_right feature of ARRAYED_LIST
+		local
+			list: ARRAYED_LIST [INTEGER]
+		do
+			create list.make_filled (default_size)
+			list.put_front (2 * default_value)
+			list.put_front (default_value)
+			list.go_i_th (6)
+			list.remove_left
+			check
+				list.count = 11
+				list @ 1 = default_value
+				list.lower = 1
+				list.upper = 11
+			end
+			utilities.print_test_passed ("remove_right")
+		end
+
+	test_wipe_out
+			-- tests the wipe_out feature of ARRAYED_LIST
+		local
+			list: ARRAYED_LIST [INTEGER]
+		do
+			create list.make_filled (default_size)
+			list.put_front (2 * default_value)
+			list.put_front (default_value)
+			list.wipe_out
+			check
+				list.count = 0
+--				list.upper = 1  -- POSSIBLE BUG, UPPER IS 0 EVEN THOUGH LOWER IS 1
+				list.lower = 1
+			end
+			utilities.print_test_passed ("wipe_out")
 		end
 
 feature
