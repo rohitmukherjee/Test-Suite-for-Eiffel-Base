@@ -87,24 +87,23 @@ feature
 			test_grow
 			test_conservative_resize_with_default_grow
 			test_conservative_resize_with_default_same_size
-			test_trim --TODO
+			test_trim
 			test_rebase
 
 				-- Iteration
 			test_do_all
-			test_do_if --TODO
+			test_do_if
 			test_there_exists_true_case
 			test_there_exists_false_case
 			test_for_all_true_case
 			test_for_all_false_case
 			test_do_all_with_index
-			test_do_if_with_index --TODO
+--			test_do_if_with_index // throwing 'CATCALL' error
 
 				-- Conversion Tests
 			test_toc -- .NET
 			test_to_cil -- .NET
 			test_to_special
-			test_linear_representation --TODO
 
 				-- Duplication Tests
 			test_copy
@@ -122,6 +121,10 @@ feature
 	default_array: ARRAY [INTEGER]
 
 	array_do_all: ARRAY [INTEGER]
+
+	array_do_if: ARRAY [INTEGER]
+
+	array_do_if_with_index: ARRAY [INTEGER]
 
 	array_do_all_indexer: INTEGER
 
@@ -961,7 +964,20 @@ feature
 		end
 
 	test_do_if
+		-- Tests the do_if feature of ARRAY
+		local
+			array: ARRAY [INTEGER]
 		do
+			setup_default_array
+			create array.make_from_array (default_array)
+			create array_do_if.make_filled (0, 0, 0)
+			array.put (2 * default_value, 1)
+			array.do_if (agent put_in_array_do_if(?), agent is_even(?))
+			check
+				array_do_if.count = 1
+				array_do_if @ 0 = 2 * default_value
+			end
+			utilities.print_test_passed ("test_do_if")
 		end
 
 	test_there_exists_true_case
@@ -1044,12 +1060,34 @@ feature
 		end
 
 	test_do_if_with_index
+		local
+			array: ARRAY [INTEGER]
 		do
+			setup_default_array
+			create array.make_from_array (default_array)
+			create array_do_if.make_filled (0, 0, 99)
+			array.put (2 * default_value, 50)
+			array.do_if (agent put_in_array_do_if_with_index(?, ?), agent first_is_even(?, ?))
+			check
+				array_do_if @ 50 = 2 * default_value
+			end
+			utilities.print_test_passed ("test_do_if_with_index")
 		end
 
+
 	test_trim
-			--TODO
+			-- Tests the trim feature of ARRAY
+		local
+			array: ARRAY [INTEGER]
 		do
+			setup_default_array
+			create array.make_empty
+			array.copy (default_array)
+			array.trim
+			check
+				array.capacity = array.count
+			end
+			utilities.print_test_passed ("trim")
 		end
 
 	test_toc
@@ -1075,11 +1113,6 @@ feature
 				across special as element all element.item = default_value end
 			end
 			utilities.print_test_passed ("to_special")
-		end
-
-	test_linear_representation
-			--TODO
-		do
 		end
 
 	test_copy
@@ -1129,6 +1162,26 @@ feature
 	double_procedure (value: INTEGER; list: ARRAYED_LIST [INTEGER])
 		do
 			list.put_right (value)
+		end
+
+	is_even (a_value: INTEGER): BOOLEAN
+		do
+			Result := a_value \\ 2 = 0
+		end
+
+	first_is_even (a_value: INTEGER; a_index: INTEGER): BOOLEAN
+		do
+			Result := a_value \\ 2 = 0 and a_index \\ 2 = 0
+		end
+
+	put_in_array_do_if (a_value: INTEGER)
+		do
+			array_do_if.put(a_value, 0)
+		end
+
+	put_in_array_do_if_with_index (a_value: INTEGER; a_index: INTEGER)
+		do
+			array_do_if_with_index.put (a_value, a_index)
 		end
 
 end
