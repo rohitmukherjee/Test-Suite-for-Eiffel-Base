@@ -63,6 +63,9 @@ feature
 			test_all_default_true_case
 			test_all_default_false_case
 
+				-- Cursor Movement Tests
+--			TODO, not sure how to check cursor movement
+
 				-- Element change Tests
 			test_put_front
 			test_put_i_th
@@ -72,6 +75,11 @@ feature
 			test_merge_left
 			test_merge_right
 			test_append
+
+				-- Resizing Tests
+			test_grow
+			test_resize
+			test_trim
 		end
 
 feature
@@ -750,6 +758,49 @@ feature
 				list @ 3 = 0
 			end
 			utilities.print_test_passed ("append")
+		end
+
+	test_grow
+		-- Tests grow feature of ARRAYED_LIST
+		local
+			list: ARRAYED_LIST [INTEGER]
+		do
+			create list.make (1)
+			list.grow (10)
+			check
+				list.count = 0
+				list.capacity = 10
+			end
+			utilities.print_test_passed ("grow")
+		end
+
+	test_resize
+		-- Tests resize feature of ARRAYED_LIST
+		local
+			list: ARRAYED_LIST [INTEGER]
+		do
+			create list.make (1)
+			list.resize (10)
+			check
+				list.count = 0
+				list.capacity = 10
+			end
+			utilities.print_test_passed ("resize")
+		end
+
+
+	test_trim
+		-- Tests trim feature of ARRAYED_LIST
+		local
+			list: ARRAYED_LIST [INTEGER]
+		do
+			create list.make (default_size)
+			list.put_front (default_value)
+			list.trim
+			check
+				list.capacity = list.count
+			end
+			utilities.print_test_passed ("trim")
 		end
 
 feature
