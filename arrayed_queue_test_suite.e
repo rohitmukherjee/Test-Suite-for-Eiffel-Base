@@ -12,56 +12,58 @@ create
 feature
 
 	run_all_tests
-	do
-		create utilities
-		utilities.print_header ("ARRAYED_QUEUE")
+		do
+			create utilities
+			utilities.print_header ("ARRAYED_QUEUE")
 
-		-- Initialization Tests
-		test_make
+				-- Initialization Tests
+			test_make
 
-		-- Access Tests
-		test_item
-		test_has_true_case
-		test_has_false_case
+				-- Access Tests
+			test_item
+			test_has_true_case
+			test_has_false_case
 
-		-- Comparison Tests
-		test_is_equal_true
-		test_is_equal_false
+				-- Comparison Tests
+			test_is_equal_true
+			test_is_equal_false
 
-		-- Measurement Tests
-		test_count
-		test_capacity
-		test_occurences
-		test_index_set
+				-- Measurement Tests
+			test_count
+			test_capacity
+			test_occurences
+			test_index_set
 
-		-- Status Report Tests
-		test_is_empty_true_case
-		test_is_empty_false_case
-		test_extendible
-		test_prunable
-	end
+				-- Status Report Tests
+			test_is_empty_true_case
+			test_is_empty_false_case
+			test_extendible
+			test_prunable
 
+				-- Element Change Tests
+			test_put -- Also tests force, extend as they are aliases
+		end
 
 feature
-	 -- All attributes used during testing go here
+	-- All attributes used during testing go here
 
-	 default_size: INTEGER
-	 once
-	 	Result := 10
-	 end
+	default_size: INTEGER
+		once
+			Result := 10
+		end
 
-	 default_value: INTEGER
+	default_value: INTEGER
 		once
 			Result := 37
 		end
 
-	 utilities: UTILITIES
+	utilities: UTILITIES
 
 feature
 	-- Tests for features
 
 	test_make
-		-- Tests the make feature of ARRAYED_QUEUE
+			-- Tests the make feature of ARRAYED_QUEUE
 		local
 			queue: ARRAYED_QUEUE [INTEGER]
 		do
@@ -74,7 +76,7 @@ feature
 		end
 
 	test_item
-		-- Tests the item feature of ARRAYED_QUEUE
+			-- Tests the item feature of ARRAYED_QUEUE
 		local
 			queue: ARRAYED_QUEUE [INTEGER]
 		do
@@ -88,7 +90,7 @@ feature
 		end
 
 	test_has_true_case
-		-- Tests the has feature of ARRAYED_QUEUE for true case
+			-- Tests the has feature of ARRAYED_QUEUE for true case
 		local
 			queue: ARRAYED_QUEUE [INTEGER]
 		do
@@ -102,7 +104,7 @@ feature
 		end
 
 	test_has_false_case
-		-- Tests the has feature of ARRAYED_QUEUE for true case
+			-- Tests the has feature of ARRAYED_QUEUE for true case
 		local
 			queue: ARRAYED_QUEUE [INTEGER]
 		do
@@ -116,7 +118,7 @@ feature
 		end
 
 	test_is_equal_true
-		-- Tests is_equal feature of ARRAYED_QUEUE for true case
+			-- Tests is_equal feature of ARRAYED_QUEUE for true case
 		local
 			queue: ARRAYED_QUEUE [INTEGER]
 			queue2: ARRAYED_QUEUE [INTEGER]
@@ -128,15 +130,15 @@ feature
 			queue2.put (default_value)
 			queue2.put (4 * default_value)
 			check
-				queue.is_equal(queue)
-				queue.is_equal(queue2)
+				queue.is_equal (queue)
+				queue.is_equal (queue2)
 				queue2.is_equal (queue)
 			end
 			utilities.print_test_passed ("is_equal_true_case")
 		end
 
-		test_is_equal_false
-		-- Tests is_equal feature of ARRAYED_QUEUE for false case
+	test_is_equal_false
+			-- Tests is_equal feature of ARRAYED_QUEUE for false case
 		local
 			queue: ARRAYED_QUEUE [INTEGER]
 			queue2: ARRAYED_QUEUE [INTEGER]
@@ -147,14 +149,14 @@ feature
 			queue2.put (default_value)
 			queue2.put (4 * default_value)
 			check
-				not queue.is_equal(queue2)
+				not queue.is_equal (queue2)
 			end
 			utilities.print_test_passed ("is_equal_false_case")
 		end
 
-		test_count
+	test_count
 			-- Tests count feature of ARRAYED_QUEUE
-			local
+		local
 			queue: ARRAYED_QUEUE [INTEGER]
 		do
 			create queue.make (default_size)
@@ -167,9 +169,9 @@ feature
 			utilities.print_test_passed ("count")
 		end
 
-		test_capacity
+	test_capacity
 			-- Tests count feature of ARRAYED_QUEUE
-			local
+		local
 			queue: ARRAYED_QUEUE [INTEGER]
 		do
 			create queue.make (default_size)
@@ -182,9 +184,9 @@ feature
 			utilities.print_test_passed ("capacity")
 		end
 
-		test_occurences
+	test_occurences
 			-- Tests occurences feature of ARRAYED_QUEUE
-			local
+		local
 			queue: ARRAYED_QUEUE [INTEGER]
 		do
 			create queue.make (default_size)
@@ -201,10 +203,9 @@ feature
 			utilities.print_test_passed ("occurences")
 		end
 
-
-		test_index_set
+	test_index_set
 			-- Tests index_set feature of ARRAYED_QUEUE
-			local
+		local
 			queue: ARRAYED_QUEUE [INTEGER]
 			interval: INTEGER_INTERVAL
 		do
@@ -221,56 +222,79 @@ feature
 			utilities.print_test_passed ("index_set")
 		end
 
-		test_is_empty_true_case
-				-- Tests is_empty feature of ARRAYED_QUEUE for true case
-				local
-					queue: ARRAYED_QUEUE [INTEGER]
-				do
-					create queue.make (default_size)
-					queue.put (default_value)
-					queue.remove
-					check
-						still_empty: queue.is_empty
-					end
-					utilities.print_test_passed ("is_empty_true_case")
-				end
+	test_is_empty_true_case
+			-- Tests is_empty feature of ARRAYED_QUEUE for true case
+		local
+			queue: ARRAYED_QUEUE [INTEGER]
+		do
+			create queue.make (default_size)
+			queue.put (default_value)
+			queue.remove
+			check
+				still_empty: queue.is_empty
+			end
+			utilities.print_test_passed ("is_empty_true_case")
+		end
 
-		test_is_empty_false_case
-				-- Tests is_empty feature of ARRAYED_QUEUE for false case
-				local
-					queue: ARRAYED_QUEUE [INTEGER]
-				do
-					create queue.make (default_size)
-					queue.put (default_value)
-					check
-						not queue.is_empty
-					end
-					utilities.print_test_passed ("is_empty_false_case")
-				end
+	test_is_empty_false_case
+			-- Tests is_empty feature of ARRAYED_QUEUE for false case
+		local
+			queue: ARRAYED_QUEUE [INTEGER]
+		do
+			create queue.make (default_size)
+			queue.put (default_value)
+			check
+				not queue.is_empty
+			end
+			utilities.print_test_passed ("is_empty_false_case")
+		end
 
-		test_extendible
-		-- Tests extendible feature of ARRAYED_QUEUE
-				local
-					queue: ARRAYED_QUEUE [INTEGER]
-				do
-					create queue.make (default_size)
-					queue.put (default_value)
-					check
-						queue.extendible
-					end
-					utilities.print_test_passed ("extendible")
-				end
+	test_extendible
+			-- Tests extendible feature of ARRAYED_QUEUE
+		local
+			queue: ARRAYED_QUEUE [INTEGER]
+		do
+			create queue.make (default_size)
+			queue.put (default_value)
+			check
+				queue.extendible
+			end
+			utilities.print_test_passed ("extendible")
+		end
 
-		test_prunable
-		-- Tests extendible feature of ARRAYED_QUEUE
-				local
-					queue: ARRAYED_QUEUE [INTEGER]
-				do
-					create queue.make (default_size)
-					queue.put (default_value)
-					check
-						not queue.prunable
-					end
-					utilities.print_test_passed ("prunable")
-				end
+	test_prunable
+			-- Tests extendible feature of ARRAYED_QUEUE
+		local
+			queue: ARRAYED_QUEUE [INTEGER]
+		do
+			create queue.make (default_size)
+			queue.put (default_value)
+			check
+				not queue.prunable
+			end
+			utilities.print_test_passed ("prunable")
+		end
+
+	test_put
+			-- Tests put/extend/force feature of ARRAYED_QUEUE
+		local
+			queue: ARRAYED_QUEUE [INTEGER]
+			i: INTEGER
+		do
+			create queue.make (100)
+			from
+				i := 1
+			until
+				i = 101
+			loop
+				queue.put (default_value)
+				i := i + 1
+			end
+			check
+				queue.count = 100
+				queue.item = default_value
+			end
+			utilities.print_test_passed ("put/extend/force")
+		end
+
 end
