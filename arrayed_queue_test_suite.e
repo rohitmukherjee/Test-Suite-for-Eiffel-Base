@@ -18,6 +18,11 @@ feature
 
 		-- Initialization Tests
 		test_make
+
+		-- Access Tests
+		test_item
+		test_has_true_case
+		test_has_false_case
 	end
 
 
@@ -52,4 +57,45 @@ feature
 			utilities.print_test_passed ("make")
 		end
 
+	test_item
+		-- Tests the item feature of ARRAYED_QUEUE
+		local
+			queue: ARRAYED_QUEUE [INTEGER]
+		do
+			create queue.make (default_size)
+			queue.put (default_value)
+			queue.put (2 * default_value)
+			check
+				queue.item = default_value
+			end
+			utilities.print_test_passed ("item")
+		end
+
+	test_has_true_case
+		-- Tests the has feature of ARRAYED_QUEUE for true case
+		local
+			queue: ARRAYED_QUEUE [INTEGER]
+		do
+			create queue.make (default_size)
+			queue.put (default_value)
+			queue.put (2 * default_value)
+			check
+				queue.has (default_value)
+			end
+			utilities.print_test_passed ("has_true_case")
+		end
+
+	test_has_false_case
+		-- Tests the has feature of ARRAYED_QUEUE for true case
+		local
+			queue: ARRAYED_QUEUE [INTEGER]
+		do
+			create queue.make (default_size)
+			queue.put (default_value)
+			queue.put (4 * default_value)
+			check
+				not queue.has (2 * default_value)
+			end
+			utilities.print_test_passed ("has_false_case")
+		end
 end
