@@ -35,6 +35,10 @@ feature
 		test_index_set
 
 		-- Status Report Tests
+		test_is_empty_true_case
+		test_is_empty_false_case
+		test_extendible
+		test_prunable
 	end
 
 
@@ -216,4 +220,57 @@ feature
 			end
 			utilities.print_test_passed ("index_set")
 		end
+
+		test_is_empty_true_case
+				-- Tests is_empty feature of ARRAYED_QUEUE for true case
+				local
+					queue: ARRAYED_QUEUE [INTEGER]
+				do
+					create queue.make (default_size)
+					queue.put (default_value)
+					queue.remove
+					check
+						still_empty: queue.is_empty
+					end
+					utilities.print_test_passed ("is_empty_true_case")
+				end
+
+		test_is_empty_false_case
+				-- Tests is_empty feature of ARRAYED_QUEUE for false case
+				local
+					queue: ARRAYED_QUEUE [INTEGER]
+				do
+					create queue.make (default_size)
+					queue.put (default_value)
+					check
+						not queue.is_empty
+					end
+					utilities.print_test_passed ("is_empty_false_case")
+				end
+
+		test_extendible
+		-- Tests extendible feature of ARRAYED_QUEUE
+				local
+					queue: ARRAYED_QUEUE [INTEGER]
+				do
+					create queue.make (default_size)
+					queue.put (default_value)
+					check
+						queue.extendible
+					end
+					utilities.print_test_passed ("extendible")
+				end
+
+		test_prunable
+		-- Tests extendible feature of ARRAYED_QUEUE
+				local
+					queue: ARRAYED_QUEUE [INTEGER]
+				do
+					create queue.make (default_size)
+					queue.put (default_value)
+					check
+						not queue.prunable
+					end
+					utilities.print_test_passed ("prunable")
+				end
 end
