@@ -42,6 +42,15 @@ feature
 
 				-- Element Change Tests
 			test_put -- Also tests force, extend as they are aliases
+			test_replace
+
+				-- Removal Tests
+			test_remove
+			test_wipe_out
+
+				-- Resizing Tests
+			test_trim
+
 		end
 
 feature
@@ -297,4 +306,69 @@ feature
 			utilities.print_test_passed ("put/extend/force")
 		end
 
+	test_replace
+		-- Tests the replace feature of ARRAYED_QUEUE
+		local
+			queue: ARRAYED_QUEUE [INTEGER]
+		do
+			create queue.make (default_size)
+			queue.put (default_value)
+			queue.put (2 * default_value)
+			queue.replace (3 * default_value)
+			check
+				queue.item = 3 * default_value
+				queue.count = 2
+			end
+			utilities.print_test_passed ("replace")
+		end
+
+	test_remove
+		-- Tests remove feature of ARRAYED_QUEUE
+		local
+			queue: ARRAYED_QUEUE [INTEGER]
+		do
+			create queue.make (default_size)
+			queue.put (3 * default_value)
+			queue.put (2 * default_value)
+			queue.put (default_value)
+			queue.remove
+			queue.remove
+			check
+				queue.count = 1
+				queue.item = default_value
+			end
+			utilities.print_test_passed ("remove")
+		end
+
+	test_wipe_out
+		-- Tests the wipe_out feature of ARRAYED_QUEUE
+		local
+			queue: ARRAYED_QUEUE [INTEGER]
+		do
+			create queue.make (default_size)
+			queue.put (3 * default_value)
+			queue.put (2 * default_value)
+			queue.put (default_value)
+			queue.wipe_out
+			check
+				queue.count = 0
+			end
+			utilities.print_test_passed ("wipe_out")
+		end
+
+	test_trim
+		-- Tests the trim feature of ARRAYED_QUEUE
+		local
+			queue: ARRAYED_QUEUE [INTEGER]
+		do
+			create queue.make (default_size)
+			queue.put (default_value)
+			queue.put (default_value)
+			queue.put (default_value)
+			queue.trim
+			check
+				capacity_is_trimmed: queue.capacity = queue.count
+			end
+			utilities.print_test_passed ("trim")
+		end
 end
