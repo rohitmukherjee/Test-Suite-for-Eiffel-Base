@@ -51,6 +51,9 @@ feature
 				-- Resizing Tests
 			test_trim
 
+				-- Conversion Tests
+			test_linear_representation
+
 		end
 
 feature
@@ -370,5 +373,27 @@ feature
 				capacity_is_trimmed: queue.capacity = queue.count
 			end
 			utilities.print_test_passed ("trim")
+		end
+
+	test_linear_representation
+		-- Tests the linear_representation feature of ARRAYED_QUEUE
+		local
+			queue: ARRAYED_QUEUE [INTEGER]
+			list: ARRAYED_LIST [INTEGER]
+		do
+			create queue.make (default_size)
+			queue.put (default_value)
+			queue.put (2 * default_value)
+			queue.put (3 * default_value)
+			list := queue.linear_representation
+			check
+				list @ 1 = default_value
+				list @ 2 = 2 * default_value
+				list @ 3 = 3 * default_value
+				list.count = 3
+				list.upper = list.count
+				list.lower = 1
+			end
+				utilities.print_test_passed ("linear_representation")
 		end
 end
