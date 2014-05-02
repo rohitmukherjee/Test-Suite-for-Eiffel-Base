@@ -98,7 +98,7 @@ feature
 			test_for_all_true_case
 			test_for_all_false_case
 			test_do_all_with_index
---			test_do_if_with_index // throwing 'CATCALL' error
+			test_do_if_with_index
 
 				-- Conversion Tests
 			test_toc -- .NET
@@ -1065,11 +1065,11 @@ feature
 		do
 			setup_default_array
 			create array.make_from_array (default_array)
-			create array_do_if.make_filled (0, 0, 99)
-			array.put (2 * default_value, 50)
-			array.do_if (agent put_in_array_do_if_with_index(?, ?), agent first_is_even(?, ?))
+			create array_do_if_with_index.make_filled (0, 0, 99)
+			array.put (2 * default_value, 10)
+			array.do_if_with_index (agent put_in_array_do_if_with_index(?, ?), agent put_if_index_is_even(?, ?))
 			check
-				array_do_if @ 50 = 2 * default_value
+				array_do_if_with_index @ 10 = 2 * default_value
 			end
 			utilities.print_test_passed ("test_do_if_with_index")
 		end
@@ -1169,7 +1169,7 @@ feature
 			Result := a_value \\ 2 = 0
 		end
 
-	first_is_even (a_value: INTEGER; a_index: INTEGER): BOOLEAN
+	put_if_index_is_even (a_value: INTEGER; a_index: INTEGER): BOOLEAN
 		do
 			Result := a_value \\ 2 = 0 and a_index \\ 2 = 0
 		end
@@ -1181,6 +1181,7 @@ feature
 
 	put_in_array_do_if_with_index (a_value: INTEGER; a_index: INTEGER)
 		do
+			print(a_index)
 			array_do_if_with_index.put (a_value, a_index)
 		end
 
