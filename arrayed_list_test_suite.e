@@ -59,12 +59,13 @@ feature
 			test_valid_index_true_case
 			test_valid_index_false_case
 			test_is_inserted_true_case
-			test_is_inserted_false_case -- POSSIBLE BUG
+			test_is_inserted_false_case
 			test_all_default_true_case
 			test_all_default_false_case
 
 				-- Element change Tests
 			test_put_front
+			test_put_front_ambiguous -- BUG (INSUFFICIENT SPECIFICATION)
 			test_put_i_th
 			test_force
 			test_put_left
@@ -655,6 +656,23 @@ feature
 			end
 			utilities.print_test_passed ("put_front")
 		end
+
+	test_put_front_ambiguous
+			-- Tests an ambiguous case of put_front
+			-- We place default_value as the first element and add a new first element which is 2 * default_value
+			-- The contract of put_front specifies that it doesn't move the cursor
+			-- However, when we add a new first item, should it point to the first position or the value in the first position?
+			local
+				list: ARRAYED_LIST [INTEGER]
+			do
+				create list.make (default_size)
+				list.put_front (default_value)
+				list.put_front (2 * default_value)
+				check
+--					list.item = 2 * default_value
+				end
+				utilities.print_test_passed ("test_put_front_ambiguous")
+			end
 
 	test_put_i_th
 			-- Tests the put_ith feature of ARRAYED_LIST
