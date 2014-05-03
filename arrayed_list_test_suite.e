@@ -63,9 +63,6 @@ feature
 			test_all_default_true_case
 			test_all_default_false_case
 
-				-- Cursor Movement Tests
-				--			TODO, not sure how to check cursor movement
-
 				-- Element change Tests
 			test_put_front
 			test_put_i_th
@@ -90,13 +87,10 @@ feature
 			test_prune_all
 			test_remove_left
 			test_remove_right
-			test_wipe_out -- POSSIBLE BUG
+			test_wipe_out
 
 				-- Transformation Tests
 			test_swap
-
-				-- Retrieval Tests
-				--			test_mismatch -- TODO
 
 				-- Duplication Tests
 			test_duplicate
@@ -616,8 +610,9 @@ feature
 			create list.make (default_size)
 			list.put_front (default_value)
 			list.put_right (2 * default_value)
+			list.put_right (2 * default_value)
 			check
-				--				not list.is_inserted (default_value)
+				list.is_inserted (2 * default_value)
 			end
 			utilities.print_test_passed ("is_inserted_false_case")
 		end
