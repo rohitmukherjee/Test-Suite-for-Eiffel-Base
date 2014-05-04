@@ -14,7 +14,7 @@ feature
 	run_all_tests
 		do
 			create utilities
-			utilities.print_header ("Arrayed_list")
+			utilities.print_header ("ARRAYED_LIST")
 
 				-- Creation procedure tests
 			test_make
