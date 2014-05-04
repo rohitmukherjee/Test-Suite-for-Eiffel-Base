@@ -18,7 +18,10 @@ feature
 
 			-- Element Change Tests
 			test_put
+
+			-- Removal Tests
 			test_prune
+			test_prune_all -- POSSIBLE INSUFFICIENT SPECIFICATION
 		end
 
 feature
@@ -69,5 +72,21 @@ feature
 				cursor_should_have_been_moved: set.item  = 2 * default_value
 			end
 			utilities.print_test_passed ("prune")
+		end
+
+	test_prune_all
+		-- Tests prune_all feature of ARRAYED_SET (inherited from ARRAYED_LIST)
+		local
+			set: ARRAYED_SET [INTEGER]
+		do
+			create set.make (default_size)
+			set.put (default_value)
+			set.put (2 * default_value)
+			set.prune_all(default_value)
+			check
+				size_is_correct: set.count = 1
+--				cursor_should_have_been_moved: set.item  = 2 * default_value --ASSERTION BREAKS because item is not defined
+			end
+			utilities.print_test_passed ("prune_all")
 		end
 end
