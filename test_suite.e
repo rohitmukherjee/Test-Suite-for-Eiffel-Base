@@ -18,11 +18,13 @@ feature -- Root Test Class.
 			arrayed_list_test_suite: ARRAYED_LIST_TEST_SUITE
 			arrayed_queue_test_suite: ARRAYED_QUEUE_TEST_SUITE
 			arrayed_set_test_suite: ARRAYED_SET_TEST_SUITE
+			binary_tree_test_suite: BINARY_TREE_TEST_SUITE
 		do
---			create arrayed_queue_test_suite.run_all_tests
---			create arrayed_list_test_suite.run_all_tests
---			create array_test_suite.run_all_tests
+			create arrayed_queue_test_suite.run_all_tests
+			create arrayed_list_test_suite.run_all_tests
+			create array_test_suite.run_all_tests
 			create arrayed_set_test_suite.run_all_tests
+			create binary_tree_test_suite.run_all_tests
 		end
 end
 

@@ -29,8 +29,12 @@ print_test_not_passed (a_test_name: STRING)
 print_header (a_test_suite_name: STRING)
 			-- Prints the header for the test suite
 			do
-				print ("------------------------%N")
+				print ("%N")
 				print ("Running " + a_test_suite_name + " Test Suite%N")
-				print ("------------------------%N")
+				print ("----------------------------------%N")
+				print ("----------------------------------%N")
 			end
+
+feature
+	-- Attributes used by routines go here
 end
