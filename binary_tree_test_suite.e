@@ -33,6 +33,15 @@ feature
 			test_left_item_exists
 			test_right_item_none
 			test_right_item_exists
+			test_first_child_none
+			test_first_child_exists
+			test_second_child_none
+			test_second_child_exists
+			test_child_1
+			test_left_sibling_none
+			test_left_sibling_exists
+			test_right_sibling_none
+			test_right_sibling_exists
 		end
 
 feature
@@ -246,6 +255,137 @@ feature
 				tree.right_item = 2 * default_root
 			end
 			utilities.print_test_passed ("right_item_exists")
+		end
+
+	test_first_child_none
+			-- Tests first_child feature for no first_child
+		local
+			tree: BINARY_TREE [INTEGER]
+			tree_right: BINARY_TREE [INTEGER]
+		do
+			create tree.make (default_root)
+			create tree_right.make (2 * default_root)
+			tree.put_right_child (tree_right)
+			check
+				tree.first_child = Void
+			end
+			utilities.print_test_passed ("first_child_none")
+		end
+
+	test_first_child_exists
+			-- Tests first_child feature for first child
+		local
+			tree: BINARY_TREE [INTEGER]
+			tree_left: BINARY_TREE [INTEGER]
+		do
+			create tree.make (default_root)
+			create tree_left.make (2 * default_root)
+			tree.put_left_child (tree_left)
+			check
+				tree.first_child = tree_left
+			end
+			utilities.print_test_passed ("first_child_exists")
+		end
+
+	test_second_child_none
+			-- Tests first_child feature for no first_child
+		local
+			tree: BINARY_TREE [INTEGER]
+			tree_left: BINARY_TREE [INTEGER]
+		do
+			create tree.make (default_root)
+			create tree_left.make (2 * default_root)
+			tree.put_left_child (tree_left)
+			check
+				tree.last_child = Void
+			end
+			utilities.print_test_passed ("second_child_none")
+		end
+
+	test_second_child_exists
+			-- Tests first_child feature for no first_child
+		local
+			tree: BINARY_TREE [INTEGER]
+			tree_right: BINARY_TREE [INTEGER]
+		do
+			create tree.make (default_root)
+			create tree_right.make (2 * default_root)
+			tree.put_right_child (tree_right)
+			check
+				tree.last_child = Void
+			end
+			utilities.print_test_passed ("second_child_exists")
+		end
+
+	test_child_1
+			-- Tests the child feature of BINARY_TREE
+		local
+			tree, tree_right: BINARY_TREE [INTEGER]
+		do
+			create tree.make (default_root)
+			create tree_right.make (2 * default_root)
+			tree.put_right_child (tree_right)
+			check
+				tree.child = tree.parent -- POSSIBLE BUG. Think this should fail
+				tree.child = tree.right_child
+			end
+			utilities.print_test_passed ("child_1")
+		end
+
+	test_left_sibling_exists
+			-- Tests the left_sibling feature of BINARY_TREE for left_sibling
+		local
+			tree: BINARY_TREE [INTEGER]
+			tree_right: BINARY_TREE [INTEGER]
+			tree_left: BINARY_TREE [INTEGER]
+		do
+			create tree.make (default_root)
+			create tree_left.make (2 * default_root)
+			create tree_right.make (3 * default_root)
+			check
+				tree_right.left_sibling = tree_left
+			end
+			utilities.print_test_passed ("right_sibling_exists")
+		end
+
+	test_left_sibling_none
+			-- Tests the left_sibling feature of BINARY_TREE for no left_sibling
+		local
+			tree: BINARY_TREE [INTEGER]
+		do
+			create tree.make (default_root)
+			check
+				tree.left_sibling = Void
+			end
+			utilities.print_test_passed ("left_sibling_none")
+		end
+
+	test_right_sibling_none
+			-- Tests the right_sibling feature of BINARY_TREE for no right_sibling
+		local
+			tree: BINARY_TREE [INTEGER]
+		do
+			create tree.make (default_root)
+			check
+				tree.right_sibling = Void
+			end
+			utilities.print_test_passed ("right_sibling_none")
+		end
+
+	test_right_sibling_exists
+			-- Tests the right_sibling feature of BINARY_TREE for  right_sibling
+		local
+			tree: BINARY_TREE [INTEGER]
+			tree_right: BINARY_TREE [INTEGER]
+			tree_left: BINARY_TREE [INTEGER]
+		do
+			create tree.make (default_root)
+			create tree_left.make (2 * default_root)
+			create tree_right.make (3 * default_root)
+			check
+				tree_left.right_sibling = tree_right
+			end
+			utilities.print_test_passed ("right_sibling_exists")
 		end
 
 end
