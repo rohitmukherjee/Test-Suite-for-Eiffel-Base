@@ -18,6 +18,7 @@ feature
 
 			-- Element Change Tests
 			test_put
+			test_put_duplicate
 
 			-- Removal Tests
 			test_prune
@@ -85,8 +86,15 @@ feature
 			set.prune_all(default_value)
 			check
 				size_is_correct: set.count = 1
---				cursor_should_have_been_moved: set.item  = 2 * default_value --ASSERTION BREAKS because item is not defined
 			end
 			utilities.print_test_passed ("prune_all")
 		end
+
+		test_put_duplicate
+			local
+				set1, set2: ARRAYED_SET[INTEGER]
+			do
+				create set1.make (default_size)
+				set1.extend (2)
+			end
 end
