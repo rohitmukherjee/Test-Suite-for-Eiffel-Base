@@ -42,6 +42,11 @@ feature
 			test_left_sibling_exists
 			test_right_sibling_none
 			test_right_sibling_exists
+
+				-- Measurement Tests
+			test_arity_1
+			test_arity_2
+			test_child_capacity
 		end
 
 feature
@@ -386,6 +391,45 @@ feature
 				tree_left.right_sibling = tree_right
 			end
 			utilities.print_test_passed ("right_sibling_exists")
+		end
+
+	test_arity_1
+			-- Tests the arity feature of BINARY TREE
+		local
+			tree: BINARY_TREE [INTEGER]
+		do
+			create tree.make (default_root)
+			check
+				tree.arity = 0
+			end
+			utilities.print_test_passed ("arity_1")
+		end
+
+	test_arity_2
+			-- Tests the arity feature of BINARY TREE
+		local
+			tree: BINARY_TREE [INTEGER]
+			tree_left: BINARY_TREE [INTEGER]
+		do
+			create tree.make (default_root)
+			create tree_left.make (2 * default_root)
+			tree.put_left_child (tree_left)
+			check
+				tree.arity = 1
+			end
+			utilities.print_test_passed ("arity_2")
+		end
+
+	test_child_capacity
+			-- Tests the child_capacity feature of BINARY TREE
+		local
+			tree: BINARY_TREE [INTEGER]
+		do
+			create tree.make (default_root)
+			check
+				tree.arity = 2
+			end
+			utilities.print_test_passed ("child_capacity")
 		end
 
 end
