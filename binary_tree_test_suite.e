@@ -47,6 +47,18 @@ feature
 			test_arity_1
 			test_arity_2
 			test_child_capacity
+
+				-- Status Report Tests
+			test_child_after_true
+			test_child_after_false
+			test_has_left_true
+			test_has_left_false
+			test_is_leaf_true
+			test_is_leaf_false
+			test_has_right_true
+			test_has_right_false
+			test_has_both_true
+			test_has_both_false
 		end
 
 feature
@@ -430,6 +442,147 @@ feature
 				tree.arity = 2
 			end
 			utilities.print_test_passed ("child_capacity")
+		end
+
+	test_child_after_true
+			-- Tests the child_after feature of BINARY_TREE for true case
+		local
+			tree: BINARY_TREE [INTEGER]
+			tree_left: BINARY_TREE [INTEGER]
+		do
+			create tree.make (default_root)
+			create tree_left.make (2 * default_root)
+			tree.put_left_child (tree_left)
+			check
+				tree.child_after
+			end
+			utilities.print_test_passed ("child_after_true")
+		end
+
+	test_child_after_false
+			-- Tests the child_after feature of BINARY_TREE for false case
+		local
+			tree: BINARY_TREE [INTEGER]
+		do
+			create tree.make (default_root)
+			check
+				not tree.child_after
+			end
+			utilities.print_test_passed ("child_after_false")
+		end
+
+	test_has_left_true
+			--Tests the has_left feature of BINARY_TREE for true case
+		local
+			tree: BINARY_TREE [INTEGER]
+			tree_left: BINARY_TREE [INTEGER]
+		do
+			create tree.make (default_root)
+			create tree_left.make (2 * default_root)
+			tree.put_left_child (tree_left)
+			check
+				tree.has_left
+			end
+			utilities.print_test_passed ("has_left_true")
+		end
+
+	test_has_left_false
+			--Tests the has_left feature of BINARY_TREE for false case
+		local
+			tree: BINARY_TREE [INTEGER]
+		do
+			create tree.make (default_root)
+			check
+				not tree.has_left
+			end
+			utilities.print_test_passed ("has_left_false")
+		end
+
+	test_is_leaf_true
+			-- Tests the is_leaf feature of BINARY_TREE for true case
+		local
+			tree: BINARY_TREE [INTEGER]
+		do
+			create tree.make (default_root)
+			check
+				tree.is_leaf
+			end
+			utilities.print_test_passed ("is_leaf_true")
+		end
+
+	test_is_leaf_false
+			-- Tests the is_leaf feature of BINARY_TREE for false case
+		local
+			tree: BINARY_TREE [INTEGER]
+			tree_left: BINARY_TREE [INTEGER]
+		do
+			create tree.make (default_root)
+			create tree_left.make (2 * default_root)
+			tree.put_left_child (tree_left)
+			check
+				not tree.is_leaf
+			end
+			utilities.print_test_passed ("is_leaf_false")
+		end
+
+	test_has_right_true
+			-- Tests the has_right faeture of BINARY_TREE for true case
+		local
+			tree: BINARY_TREE [INTEGER]
+			tree_right: BINARY_TREE [INTEGER]
+		do
+			create tree.make (default_root)
+			create tree_right.make (2 * default_root)
+			tree.put_right_child (tree_right)
+			check
+				tree.has_right
+			end
+			utilities.print_test_passed ("has_right_true")
+		end
+
+	test_has_right_false
+			--Tests the has_right feature of BINARY_TREE for false case
+		local
+			tree: BINARY_TREE [INTEGER]
+		do
+			create tree.make (default_root)
+			check
+				not tree.has_right
+			end
+			utilities.print_test_passed ("has_right_false")
+		end
+
+	test_has_both_true
+			--Tests the has_both feature of BINARY_TREE for true case
+		local
+			tree: BINARY_TREE [INTEGER]
+			tree_left: BINARY_TREE [INTEGER]
+			tree_right: BINARY_TREE [INTEGER]
+		do
+			create tree.make (default_root)
+			create tree_left.make (2 * default_root)
+			create tree_right.make (3 * default_root)
+			tree.put_left_child (tree_left)
+			tree.put_right_child (tree_right)
+			check
+				tree.has_both
+			end
+			utilities.print_test_passed ("has_both_true")
+		end
+
+	test_has_both_false
+			--Tests the has_both feature of BINARY_TREE for false case
+		local
+			tree: BINARY_TREE [INTEGER]
+			tree_left: BINARY_TREE [INTEGER]
+		do
+			create tree.make (default_root)
+			create tree_left.make (2 * default_root)
+			tree.put_left_child (tree_left)
+			check
+				not tree.has_both
+			end
+			utilities.print_test_passed ("has_both_false")
 		end
 
 end
