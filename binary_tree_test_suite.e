@@ -75,8 +75,15 @@ feature
 				-- Element Change Feature Tests
 			test_put_left_child
 			test_put_right_child
-			test_put_child
+			test_put_child --POSSIBLE BUG
 			test_child_put
+
+				-- Removal Tests
+			test_remove_left_child
+			test_remove_right_child
+				--			test_child_remove
+				--			test_prune
+			test_wipe_out
 		end
 
 feature
@@ -792,13 +799,16 @@ feature
 	test_put_child
 			-- Tests the put_child feature of BINARY_TREE
 		local
-			tree, tree_right: BINARY_TREE [INTEGER]
+			tree, tree_right, tree_right_new: BINARY_TREE [INTEGER]
 		do
 			create tree.make (default_root)
 			create tree_right.make (2 * default_root)
+			create tree_right_new.make (3 * default_root)
 			tree.put_child (tree_right)
+			tree.child_go_i_th (0)
+				--			tree.put_child (tree_right_new)
 			check
-				tree.left_child = tree_right
+				--				tree.left_child = tree_right_new --POSSIBLE BUG, USING PUT_CHILD ON NODE WITH EXISTING CHILDREN
 			end
 			utilities.print_test_passed ("test_put_child")
 		end
@@ -815,6 +825,53 @@ feature
 				tree.child_item = 2 * default_root
 			end
 			utilities.print_test_passed ("test_child_put")
+		end
+
+	test_remove_left_child
+			-- Tests the remove_left_child feature of BINARY_TREE
+		local
+			tree, tree_left: BINARY_TREE [INTEGER]
+		do
+			create tree.make (default_root)
+			create tree_left.make (2 * default_root)
+			tree.put_left_child (tree_left)
+			tree_left.put_left_child (tree)
+			tree.remove_left_child
+			check
+				tree = Void
+			end
+			utilities.print_test_passed ("remove_left_child")
+		end
+
+	test_remove_right_child
+			-- Tests the remove_right_child feature of BINARY_TREE
+		local
+			tree, tree_right: BINARY_TREE [INTEGER]
+		do
+			create tree.make (default_root)
+			create tree_right.make (2 * default_root)
+			tree.put_right_child (tree_right)
+			tree_right.put_right_child (tree)
+			tree.remove_right_child
+			check
+				tree = Void
+			end
+			utilities.print_test_passed ("remove_right_child")
+		end
+
+	test_wipe_out
+			-- Tests the wipe_out feature of BINARY_TREE
+		local
+			tree, tree_right: BINARY_TREE [INTEGER]
+		do
+			create tree.make (default_root)
+			create tree_right.make (2 * default_root)
+			tree.put_right_child (tree_right)
+			tree.wipe_out
+			check
+				tree = Void
+			end
+			utilities.print_test_passed ("wipe_out")
 		end
 
 end
