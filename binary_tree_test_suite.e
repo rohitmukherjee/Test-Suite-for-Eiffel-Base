@@ -37,7 +37,7 @@ feature
 			test_first_child_exists
 			test_second_child_none
 			test_second_child_exists
-			test_child_1
+			test_child_1 -- POSSIBLE_BUG
 			test_left_sibling_none
 			test_left_sibling_exists
 			test_right_sibling_none
@@ -70,7 +70,13 @@ feature
 			test_child_back_valid
 			test_child_back_invalid
 			test_child_go_i_th_valid
-			test_child_go_i_th_invalid
+			test_child_go_i_th_invalid -- CIRCULAR TREE REFERENCES ARE ALLOWED?
+
+				-- Element Change Feature Tests
+			test_put_left_child
+			test_put_right_child
+			test_put_child
+			test_child_put
 		end
 
 feature
@@ -749,6 +755,66 @@ feature
 				tree.child_item = Void
 			end
 			utilities.print_test_passed ("child_go_ith_invalid")
+		end
+
+	test_put_left_child
+			-- Tests the put_left_child feature of BINARY_TREE
+		local
+			tree, tree_left: BINARY_TREE [INTEGER]
+		do
+			create tree.make (default_root)
+			create tree_left.make (2 * default_root)
+			tree.put_left_child (tree_left)
+			tree_left.put_left_child (tree)
+			tree_left.child_start
+			check
+				tree_left.child_item = default_root
+			end
+			utilities.print_test_passed ("test_put_child_left")
+		end
+
+	test_put_right_child
+			-- Tests the put_right_child feature of BINARY_TREE
+		local
+			tree, tree_right: BINARY_TREE [INTEGER]
+		do
+			create tree.make (default_root)
+			create tree_right.make (2 * default_root)
+			tree.put_right_child (tree_right)
+			tree_right.put_right_child (tree)
+			tree_right.child_start
+			check
+				tree_right.child_item = default_root
+			end
+			utilities.print_test_passed ("test_put_child_right")
+		end
+
+	test_put_child
+			-- Tests the put_child feature of BINARY_TREE
+		local
+			tree, tree_right: BINARY_TREE [INTEGER]
+		do
+			create tree.make (default_root)
+			create tree_right.make (2 * default_root)
+			tree.put_child (tree_right)
+			check
+				tree.left_child = tree_right
+			end
+			utilities.print_test_passed ("test_put_child")
+		end
+
+	test_child_put
+			-- Tests the child_put feature of BINARY_TREE
+		local
+			tree: BINARY_TREE [INTEGER]
+		do
+			create tree.make (default_root)
+			tree.child_put (2 * default_root)
+			tree.child_start
+			check
+				tree.child_item = 2 * default_root
+			end
+			utilities.print_test_passed ("test_child_put")
 		end
 
 end
