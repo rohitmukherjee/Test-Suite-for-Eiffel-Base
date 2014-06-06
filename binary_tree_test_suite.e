@@ -59,6 +59,18 @@ feature
 			test_has_right_false
 			test_has_both_true
 			test_has_both_false
+
+				-- Cursor Movement Tests
+			test_child_start_valid
+			test_child_start_invalid
+			test_child_finish_valid
+			test_child_finish_invalid
+			test_child_forth_valid
+			test_child_forth_invalid
+			test_child_back_valid
+			test_child_back_invalid
+			test_child_go_i_th_valid
+			test_child_go_i_th_invalid
 		end
 
 feature
@@ -337,11 +349,14 @@ feature
 	test_child_1
 			-- Tests the child feature of BINARY_TREE
 		local
-			tree, tree_right: BINARY_TREE [INTEGER]
+			tree, tree_right, tree_left: BINARY_TREE [INTEGER]
 		do
 			create tree.make (default_root)
 			create tree_right.make (2 * default_root)
+			create tree_left.make (3 * default_root)
 			tree.put_right_child (tree_right)
+			tree.put_left_child (tree_left)
+			tree.child_go_i_th (2)
 			check
 				tree.child = tree.parent -- POSSIBLE BUG. Think this should fail
 				tree.child = tree.right_child
@@ -583,6 +598,157 @@ feature
 				not tree.has_both
 			end
 			utilities.print_test_passed ("has_both_false")
+		end
+
+	test_child_start_invalid
+			-- Tests the child_start feature of BINARY_TREE for invalid case
+		local
+			tree: BINARY_TREE [INTEGER]
+		do
+			create tree.make (default_root)
+			tree.child_start
+			check
+				tree.child_index = 0
+			end
+			utilities.print_test_passed ("child_start_invalid")
+		end
+
+	test_child_start_valid
+			-- Tests the child_start feature of BINARY_TREE for valid case
+		local
+			tree, tree_left: BINARY_TREE [INTEGER]
+		do
+			create tree.make (default_root)
+			create tree_left.make (2 * default_root)
+			tree.put_left_child (tree_left)
+			tree.child_start
+			check
+				tree.child_index = 1
+			end
+			utilities.print_test_passed ("child_start_valid")
+		end
+
+	test_child_finish_valid
+			-- Tests the child_finish feature of BINARY_TREE for child present
+		local
+			tree, tree_left, tree_right: BINARY_TREE [INTEGER]
+		do
+			create tree.make (default_root)
+			create tree_left.make (2 * default_root)
+			create tree_right.make (3 * default_root)
+			tree.put_left_child (tree_left)
+			tree.put_right_child (tree_right)
+			tree.child_finish
+			check
+				tree.child_index = 2
+			end
+			utilities.print_test_passed ("child_finish_valid")
+		end
+
+	test_child_finish_invalid
+			-- Tests the child_finish feature of BINARY_TREE for no child present
+		local
+			tree: BINARY_TREE [INTEGER]
+		do
+			create tree.make (default_root)
+			tree.child_finish
+			check
+				tree.child_index = 0
+			end
+			utilities.print_test_passed ("child_finish_invalid")
+		end
+
+	test_child_forth_valid
+			-- Tests the child_forth feature of BINARY_TREE for child present
+		local
+			tree, tree_left, tree_right: BINARY_TREE [INTEGER]
+		do
+			create tree.make (default_root)
+			create tree_left.make (2 * default_root)
+			create tree_right.make (3 * default_root)
+			tree.put_left_child (tree_left)
+			tree.put_right_child (tree_right)
+			tree.child_forth
+			check
+				tree.child_index = 1
+			end
+			utilities.print_test_passed ("child_forth_valid")
+		end
+
+	test_child_forth_invalid
+			-- Tests the child_forth feature of BINARY_TREE for no child present
+		local
+			tree: BINARY_TREE [INTEGER]
+		do
+			create tree.make (default_root)
+			tree.child_forth
+			check
+				tree.child_index = 0
+			end
+			utilities.print_test_passed ("child_forth_invalid")
+		end
+
+	test_child_back_valid
+			-- Tests the child_back feature of BINARY_TREE for child present
+		local
+			tree, tree_left, tree_right: BINARY_TREE [INTEGER]
+		do
+			create tree.make (default_root)
+			create tree_left.make (2 * default_root)
+			create tree_right.make (3 * default_root)
+			tree.put_left_child (tree_left)
+			tree.put_right_child (tree_right)
+			tree.child_finish
+			tree.child_back
+			check
+				tree.child_index = 1
+			end
+			utilities.print_test_passed ("child_back_valid")
+		end
+
+	test_child_back_invalid
+			-- Tests the child_back feature of BINARY_TREE for no child present
+		local
+			tree: BINARY_TREE [INTEGER]
+		do
+			create tree.make (default_root)
+			tree.child_back
+			check
+				tree.child_index = 0
+			end
+			utilities.print_test_passed ("child_back_invalid")
+		end
+
+	test_child_go_i_th_valid
+			-- Tests the child_go_i_th feature of BINARY_TREE for child invalid index
+		local
+			tree, tree_left: BINARY_TREE [INTEGER]
+		do
+			create tree.make (default_root)
+			create tree_left.make (2 * default_root)
+			tree.put_left_child (tree_left)
+			tree.child_go_i_th (1)
+			check
+				tree.child_index = 1
+				tree.child_item = 2 * default_root
+			end
+			utilities.print_test_passed ("child_go_ith_valid")
+		end
+
+	test_child_go_i_th_invalid
+			-- Tests the child_go_i_th feature of BINARY_TREE for child invalid index
+		local
+			tree, tree_left: BINARY_TREE [INTEGER]
+		do
+			create tree.make (default_root)
+			create tree_left.make (2 * default_root)
+			tree.put_left_child (tree_left)
+			tree.child_go_i_th (5)
+			check
+				tree.child_index = 5
+				tree.child_item = Void
+			end
+			utilities.print_test_passed ("child_go_ith_invalid")
 		end
 
 end
