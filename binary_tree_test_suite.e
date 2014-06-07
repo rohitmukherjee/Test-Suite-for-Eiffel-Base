@@ -81,8 +81,9 @@ feature
 				-- Removal Tests
 			test_remove_left_child
 			test_remove_right_child
-				--			test_child_remove
-				--			test_prune
+			test_child_remove
+			test_prune
+			test_prune_circular
 			test_wipe_out
 		end
 
@@ -857,6 +858,64 @@ feature
 				tree = Void
 			end
 			utilities.print_test_passed ("remove_right_child")
+		end
+
+	test_child_remove
+			-- Tests the child_remove feature of BINARY_TREE
+		local
+			tree, tree_right, tree_left: BINARY_TREE [INTEGER]
+		do
+			create tree.make (default_root)
+			create tree_right.make (2 * default_root)
+			create tree_left.make (3 * default_root)
+			tree.put_left_child (tree_left)
+			tree.put_right_child (tree_right)
+				-- Adding a circular reference here
+			tree_right.put_left_child (tree)
+			tree.child_finish
+			tree.child_remove
+			check
+				tree.left_child = Void
+				tree.right_child = Void
+			end
+			utilities.print_test_passed ("test_child_remove")
+		end
+
+	test_prune
+			-- Tests the prune feature of BINARY_TREE for flat BINARY TREE
+		local
+			tree, tree_left, tree_right: BINARY_TREE [INTEGER]
+		do
+			create tree.make (default_root)
+			create tree_left.make (2 * default_root)
+			create tree_right.make (3 * default_root)
+			tree.put_left_child (tree_left)
+			tree.put_right_child (tree_right)
+			tree.prune (tree_left)
+			check
+				tree.left_child = Void
+			end
+			utilities.print_test_passed ("prune")
+		end
+
+	test_prune_circular
+			-- Tests prune feature of BINARY TREE for a tree with circular references
+		local
+			tree, tree_left, tree_right: BINARY_TREE [INTEGER]
+		do
+			create tree.make (default_root)
+			create tree_left.make (2 * default_root)
+			create tree_right.make (3 * default_root)
+			tree.put_left_child (tree_left)
+			tree.put_right_child (tree_right)
+			tree_right.put_left_child (tree_left)
+			tree.prune (tree_right)
+			check
+				tree.item = default_root
+				tree.left_child = Void
+				tree.right_child = Void
+			end
+			utilities.print_test_passed ("prune_circular")
 		end
 
 	test_wipe_out
