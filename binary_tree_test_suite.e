@@ -85,6 +85,17 @@ feature
 			test_prune
 			test_prune_circular
 			test_wipe_out
+			test_forget_right
+			test_forget_right_circular
+			test_forget_left
+			test_forget_left_circular
+
+				-- Duplication Tests
+			test_duplicate
+			test_duplicate_circular
+			test_duplicate_all
+			test_copy_1
+			test_copy_2
 		end
 
 feature
@@ -931,6 +942,171 @@ feature
 				tree = Void
 			end
 			utilities.print_test_passed ("wipe_out")
+		end
+
+	test_forget_right
+			-- Tests the forget_right feature of BINARY TREE for flat BINARY TREE
+		local
+			tree, tree_right: BINARY_TREE [INTEGER]
+		do
+			create tree.make (default_root)
+			create tree_right.make (2 * default_root)
+			tree.put_right_child (tree_right)
+			tree.forget_right
+			check
+				tree.right_child = Void
+				tree_right /= Void
+			end
+			utilities.print_test_passed ("forget_right")
+		end
+
+	test_forget_right_circular
+			-- Tests the forget_right feature of BINARY TREE for BINARY TREE with circular references
+		local
+			tree, tree_right, tree_left: BINARY_TREE [INTEGER]
+		do
+			create tree.make (default_root)
+			create tree_right.make (2 * default_root)
+			create tree_left.make (3 * default_root)
+			tree.put_right_child (tree_right)
+			tree.put_left_child (tree_left)
+			tree_right.put_left_child (tree_left)
+			tree.forget_right
+			check
+				tree.right_child = Void
+				tree.left_child = Void
+				tree_left /= Void
+				tree_right /= Void
+			end
+			utilities.print_test_passed ("forget_right_circular")
+		end
+
+	test_forget_left
+			-- Tests the forget_left feature of BINARY TREE for flat BINARY TREE
+		local
+			tree, tree_left: BINARY_TREE [INTEGER]
+		do
+			create tree.make (default_root)
+			create tree_left.make (2 * default_root)
+			tree.put_left_child (tree_left)
+			tree.forget_left
+			check
+				tree.left_child = Void
+				tree_left /= Void
+			end
+			utilities.print_test_passed ("forget_left")
+		end
+
+	test_forget_left_circular
+			-- Tests the forget_left feature of BINARY TREE for BINARY TREE with circular references
+		local
+			tree, tree_right, tree_left: BINARY_TREE [INTEGER]
+		do
+			create tree.make (default_root)
+			create tree_right.make (2 * default_root)
+			create tree_left.make (3 * default_root)
+			tree.put_right_child (tree_right)
+			tree.put_left_child (tree_left)
+			tree_left.put_right_child (tree_right)
+			tree.forget_left
+			check
+				tree.left_child = Void
+				tree.right_child = Void
+				tree_left /= Void
+				tree_right /= Void
+			end
+			utilities.print_test_passed ("forget_left_circular")
+		end
+
+	test_duplicate
+			-- Tests the duplicate feature of BINARY TREE for flat trees
+		local
+			tree, tree_right, tree_left, tree_copy: BINARY_TREE [INTEGER]
+		do
+			create tree.make (default_root)
+			create tree_left.make (2 * default_root)
+			create tree_right.make (3 * default_root)
+			tree.put_left_child (tree_left)
+			tree.put_right_child (tree_right)
+			tree.child_finish
+			tree_copy := tree.duplicate (2)
+			check
+				tree_copy.item = tree_right.item
+			end
+			utilities.print_test_passed ("duplicate")
+		end
+
+	test_duplicate_circular
+			-- Tests the duplicate feature of BINARY TREE for trees with circular references
+		local
+			tree, tree_right, tree_left, tree_copy: BINARY_TREE [INTEGER]
+		do
+			create tree.make (default_root)
+			create tree_left.make (2 * default_root)
+			create tree_right.make (3 * default_root)
+			tree.put_left_child (tree_left)
+			tree.put_right_child (tree_right)
+			tree_right.put_left_child (tree_left)
+			tree.child_finish
+			tree_copy := tree.duplicate (2)
+			check
+				tree_copy.item = tree_right.item
+				tree_copy.right_child.child = tree_left
+			end
+			utilities.print_test_passed ("duplicate_circular")
+		end
+
+	test_duplicate_all
+			-- Tests duplicate_all feature of BINARY_TREE
+		local
+			tree, tree_right, tree_left, tree_copy: BINARY_TREE [INTEGER]
+		do
+			create tree.make (default_root)
+			create tree_left.make (2 * default_root)
+			create tree_right.make (3 * default_root)
+			tree.put_left_child (tree_left)
+			tree.put_right_child (tree_right)
+			tree_right.put_left_child (tree_left)
+			tree.child_finish
+			tree_copy := tree.duplicate_all
+			check
+				tree_copy.item = tree_right.item
+				tree_copy.right_child.child = tree_left
+			end
+			utilities.print_test_passed ("duplicate_all")
+		end
+
+	test_copy_1
+			-- Tests the copy feature of tree
+		local
+			tree1, tree2: BINARY_TREE [INTEGER]
+		do
+			create tree1.make (default_root)
+			create tree2.make (2 * default_root)
+			tree1.put_left_child (tree2)
+			tree2.copy (tree1)
+			check
+				tree1 = tree2
+				tree1.item = tree2.item
+			end
+			utilities.print_test_passed ("copy_1")
+		end
+
+	test_copy_2
+			-- Tests the copy feature of tree
+		local
+			tree1, tree2: BINARY_TREE [INTEGER]
+		do
+			create tree1.make (1)
+			tree1.compare_objects
+			create tree2.make (2)
+			tree2.put_left_child (create {BINARY_TREE [INTEGER]}.make (3))
+			tree1.copy (tree2)
+			check
+				tree1 = tree2
+				tree1.item = tree2.item
+			end
+			utilities.print_test_passed ("copy_2")
 		end
 
 end
