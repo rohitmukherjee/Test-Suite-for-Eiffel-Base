@@ -68,11 +68,19 @@ feature
 			test_valid_iteration_index_true
 			test_valid_iteration_index_false
 
-			-- Cursor Movement Tests
+				-- Cursor Movement Tests
 			test_start
 			test_forth
 			test_search_found
 			test_search_not_found
+
+				-- Element Change Tests
+			test_put
+			test_force
+			test_extend
+			test_replace
+			test_replace_key
+			test_merge
 		end
 
 feature
@@ -698,7 +706,7 @@ feature
 		end
 
 	test_start
-		-- Tests the start feature of HASH_TABLE
+			-- Tests the start feature of HASH_TABLE
 		local
 			table: HASH_TABLE [INTEGER, INTEGER]
 		do
@@ -709,7 +717,7 @@ feature
 		end
 
 	test_forth
-		-- Tests the forth feature of HASH_TABLE
+			-- Tests the forth feature of HASH_TABLE
 		local
 			table: HASH_TABLE [INTEGER, INTEGER]
 		do
@@ -721,13 +729,13 @@ feature
 		end
 
 	test_search_found
-		-- Tests the found feature of HASH_TABLE
+			-- Tests the found feature of HASH_TABLE
 		local
 			table: HASH_TABLE [INTEGER, INTEGER]
 		do
 			create table.make (default_size)
 			table.put (default_value, default_key)
-			table.search(default_key)
+			table.search (default_key)
 			check
 				table.found
 				table.found_item = default_value
@@ -736,19 +744,107 @@ feature
 		end
 
 	test_search_not_found
-		-- Tests the found feature of HASH_TABLE
+			-- Tests the found feature of HASH_TABLE
 		local
 			table: HASH_TABLE [INTEGER, INTEGER]
 		do
 			create table.make (default_size)
 			table.put (default_value, default_key)
-			table.search(2 * default_key)
+			table.search (2 * default_key)
 			check
 				table.not_found
 			end
 			utilities.print_test_passed ("test_search_not_found")
 		end
 
+	test_put
+			-- Tests the put feature of HASH_TABLE
+		local
+			table: HASH_TABLE [INTEGER, INTEGER]
+		do
+			create table.make (default_size)
+			table.put (default_value, default_key)
+			table.search (default_key)
+			check
+				table.found_item = default_value
+			end
+			utilities.print_test_passed ("put")
+		end
 
+	test_force
+			-- Tests the force feature of HASH_TABLE
+		local
+			table: HASH_TABLE [INTEGER, INTEGER]
+		do
+			create table.make (default_size)
+			table.put (default_value, default_key)
+			table.force (2 * default_value, default_key)
+			check
+				table.found
+				table.found_item = default_value
+			end
+			utilities.print_test_passed ("force")
+		end
+
+	test_extend
+			-- Tests the extend feature of HASH_TABLE
+		local
+			table: HASH_TABLE [INTEGER, INTEGER]
+		do
+			create table.make (default_size)
+			table.extend (default_value, default_key)
+			check
+				table.inserted
+			end
+			utilities.print_test_passed ("extend")
+		end
+
+	test_replace
+			-- Tests the replace feature of HASH_TABLE
+		local
+			table: HASH_TABLE [INTEGER, INTEGER]
+		do
+			create table.make (default_size)
+			table.put (default_value, default_key)
+			table.replace (2 * default_value, default_key)
+			table.search (default_key)
+			check
+				table.found_item = 2 * default_value
+			end
+			utilities.print_test_passed ("replace")
+		end
+
+	test_replace_key
+			-- Tests the replace_key feature of HASH_TABLE
+		local
+			table: HASH_TABLE [INTEGER, INTEGER]
+		do
+			create table.make (default_size)
+			table.put (default_value, default_key)
+			table.replace_key (2 * default_key, default_key)
+			table.search (2 * default_key)
+			check
+				table.found_item = default_value
+			end
+			utilities.print_test_passed ("replace_key")
+		end
+
+	test_merge
+			-- Tests the merge feature of HASH_TABLE
+		local
+			table: HASH_TABLE [INTEGER, INTEGER]
+			table2: HASH_TABLE [INTEGER, INTEGER]
+		do
+			create table.make (default_size)
+			create table2.make (default_size)
+			table.put (default_value, default_key)
+			table2.put (2 * default_value, default_key)
+			table.merge (table2)
+			table.search (default_key)
+			check
+				table.found_item = 2 * default_value
+			end
+			utilities.print_test_passed ("merge")
+		end
 
 end
