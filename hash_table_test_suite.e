@@ -46,6 +46,27 @@ feature
 			test_is_equal_false
 			test_disjoint_true
 			test_disjoint_false
+
+				-- Status Report Tests
+			test_full
+			test_extendible
+			test_prunable
+			test_inserted_true
+			test_inserted_false
+			test_replaced_true
+			test_replaced_false
+			test_removed_true
+			test_removed_false
+			test_found_false
+			test_found_true
+			test_not_found_true
+			test_not_found_false
+			test_off_true
+			test_off_false
+			test_valid_key_true
+			test_valid_key_false
+			test_valid_iteration_index_true
+			test_valid_iteration_index_false
 		end
 
 feature
@@ -412,6 +433,262 @@ feature
 				not table_1.disjoint (table_1)
 			end
 			utilities.print_test_passed ("disjoint_false")
+		end
+
+	test_full
+			-- Tests the full feature of HASH_TABLE
+		local
+			table: HASH_TABLE [INTEGER, INTEGER]
+		do
+			create table.make (default_size)
+			check
+				not table.full
+			end
+			utilities.print_test_passed ("full")
+		end
+
+	test_extendible
+			-- Tests the extendible feature of HASH_TABLE
+		local
+			table: HASH_TABLE [INTEGER, INTEGER]
+		do
+			create table.make (default_size)
+			check
+				not table.extendible
+			end
+			utilities.print_test_passed ("extendible")
+		end
+
+	test_prunable
+			-- Tests the prunable feature of HASH_TABLE
+		local
+			table: HASH_TABLE [INTEGER, INTEGER]
+		do
+			create table.make (default_size)
+			check
+				table.prunable
+			end
+			utilities.print_test_passed ("prunable")
+		end
+
+	test_inserted_true
+			-- Tests the inserted feature of HASH_TABLE for true case
+		local
+			table: HASH_TABLE [INTEGER, INTEGER]
+		do
+			create table.make (default_size)
+			table.put (default_value, default_key)
+			check
+				table.inserted
+			end
+			utilities.print_test_passed ("inserted_true")
+		end
+
+	test_inserted_false
+			-- Tests the inserted feature of HASH_TABLE for false case
+		local
+			table: HASH_TABLE [INTEGER, INTEGER]
+		do
+			create table.make (default_size)
+			table.put (default_value, default_key)
+			table.remove (default_key)
+			check
+				not table.inserted
+			end
+			utilities.print_test_passed ("inserted_false")
+		end
+
+	test_replaced_true
+			-- Tests the replace feature of HASH_TABLE for true case
+		local
+			table: HASH_TABLE [INTEGER, INTEGER]
+		do
+			create table.make (default_size)
+			table.put (default_value, default_key)
+			table.replace (2 * default_value, default_key)
+			check
+				table.replaced
+			end
+			utilities.print_test_passed ("replaced_true")
+		end
+
+	test_replaced_false
+			-- Tests the replace feature of HASH_TABLE for true case
+		local
+			table: HASH_TABLE [INTEGER, INTEGER]
+		do
+			create table.make (default_size)
+			table.put (default_value, default_key)
+			check
+				not table.replaced
+			end
+			utilities.print_test_passed ("replaced_false")
+		end
+
+	test_removed_true
+			-- Tests the remove feature of HASH_TABLE for true case
+		local
+			table: HASH_TABLE [INTEGER, INTEGER]
+		do
+			create table.make (default_size)
+			table.put (default_value, default_key)
+			table.remove (default_key)
+			check
+				table.removed
+			end
+			utilities.print_test_passed ("removed_true")
+		end
+
+	test_removed_false
+			-- Tests the remove feature of HASH_TABLE for false case
+		local
+			table: HASH_TABLE [INTEGER, INTEGER]
+		do
+			create table.make (default_size)
+			table.put (default_value, default_key)
+			check
+				not table.removed
+			end
+			utilities.print_test_passed ("removed_false")
+		end
+
+	test_found_true
+			-- Tests the found feature of HASH_TABLE for true case
+		local
+			table: HASH_TABLE [INTEGER, INTEGER]
+		do
+			create table.make (default_size)
+			table.put (default_value, default_key)
+			table.search (default_key)
+			check
+				table.found
+			end
+			utilities.print_test_passed ("found_true")
+		end
+
+	test_found_false
+			-- Tests the found feature of HASH_TABLE for false case
+		local
+			table: HASH_TABLE [INTEGER, INTEGER]
+		do
+			create table.make (default_size)
+			table.put (default_value, default_key)
+			table.search (2 * default_key)
+			check
+				not table.found
+			end
+			utilities.print_test_passed ("found_false")
+		end
+
+	test_not_found_true
+			-- Tests the not_found feature of HASH_TABLE for true case
+		local
+			table: HASH_TABLE [INTEGER, INTEGER]
+		do
+			create table.make (default_size)
+			table.put (default_value, default_key)
+			table.search (2 * default_key)
+			check
+				table.not_found
+			end
+			utilities.print_test_passed ("not_found_true")
+		end
+
+	test_not_found_false
+			-- Tests the not_found feature of HASH_TABLE for false case
+		local
+			table: HASH_TABLE [INTEGER, INTEGER]
+		do
+			create table.make (default_size)
+			table.put (default_value, default_key)
+			table.search (default_key)
+			check
+				not table.not_found
+			end
+			utilities.print_test_passed ("not_found_false")
+		end
+
+	test_off_true
+			-- Tests the off feature of HASH_TABLE for true case
+		local
+			table: HASH_TABLE [INTEGER, INTEGER]
+		do
+			create table.make (default_size)
+			table.put (default_value, default_key)
+			table.start
+			table.forth
+			check
+				table.off
+			end
+			utilities.print_test_passed ("off_true")
+		end
+
+	test_off_false
+			-- Tests the off feature of HASH_TABLE for false case
+		local
+			table: HASH_TABLE [INTEGER, INTEGER]
+		do
+			create table.make (default_size)
+			table.put (default_value, default_key)
+			table.start
+			check
+				not table.off
+			end
+			utilities.print_test_passed ("off_false")
+		end
+
+	test_valid_key_true
+			-- Tests the valid key feature of HASH_TABLE for true case
+		local
+			table: HASH_TABLE [INTEGER, INTEGER]
+		do
+			create table.make (default_size)
+			table.put (default_value, default_key)
+			check
+				table.valid_key (default_key)
+			end
+			utilities.print_test_passed ("valid_key_true")
+		end
+
+	test_valid_key_false
+			-- Tests the valid key feature of HASH_TABLE for false case
+		local
+			table: HASH_TABLE [INTEGER, INTEGER]
+		do
+			create table.make (default_size)
+			table.put (default_value, default_key)
+			check
+				table.valid_key (default_key)
+			end
+			utilities.print_test_passed ("valid_key_true")
+		end
+
+	test_valid_iteration_index_true
+			-- Tests the valid_itereation_index for HASH_TABLE for true case
+		local
+			table: HASH_TABLE [INTEGER, INTEGER]
+		do
+			create table.make (default_size)
+			table.put (default_value, default_key)
+			table.start
+			check
+				table.valid_iteration_index (0)
+			end
+			utilities.print_test_passed ("valid_iteration_index_true")
+		end
+
+	test_valid_iteration_index_false
+			-- Tests the valid_itereation_index for HASH_TABLE for true case
+		local
+			table: HASH_TABLE [INTEGER, INTEGER]
+		do
+			create table.make (default_size)
+			table.put (default_value, default_key)
+			table.start
+			check
+				not table.valid_iteration_index (10)
+			end
+			utilities.print_test_passed ("valid_iteration_index_false")
 		end
 
 end
