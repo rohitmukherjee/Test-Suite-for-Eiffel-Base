@@ -67,6 +67,12 @@ feature
 			test_valid_key_false
 			test_valid_iteration_index_true
 			test_valid_iteration_index_false
+
+			-- Cursor Movement Tests
+			test_start
+			test_forth
+			test_search_found
+			test_search_not_found
 		end
 
 feature
@@ -690,5 +696,59 @@ feature
 			end
 			utilities.print_test_passed ("valid_iteration_index_false")
 		end
+
+	test_start
+		-- Tests the start feature of HASH_TABLE
+		local
+			table: HASH_TABLE [INTEGER, INTEGER]
+		do
+			create table.make (default_size)
+			table.put (default_value, default_key)
+			table.start
+			utilities.print_test_passed ("test_start")
+		end
+
+	test_forth
+		-- Tests the forth feature of HASH_TABLE
+		local
+			table: HASH_TABLE [INTEGER, INTEGER]
+		do
+			create table.make (default_size)
+			table.put (default_value, default_key)
+			table.start
+			table.forth
+			utilities.print_test_passed ("test_forth")
+		end
+
+	test_search_found
+		-- Tests the found feature of HASH_TABLE
+		local
+			table: HASH_TABLE [INTEGER, INTEGER]
+		do
+			create table.make (default_size)
+			table.put (default_value, default_key)
+			table.search(default_key)
+			check
+				table.found
+				table.found_item = default_value
+			end
+			utilities.print_test_passed ("test_search_found")
+		end
+
+	test_search_not_found
+		-- Tests the found feature of HASH_TABLE
+		local
+			table: HASH_TABLE [INTEGER, INTEGER]
+		do
+			create table.make (default_size)
+			table.put (default_value, default_key)
+			table.search(2 * default_key)
+			check
+				table.not_found
+			end
+			utilities.print_test_passed ("test_search_not_found")
+		end
+
+
 
 end
